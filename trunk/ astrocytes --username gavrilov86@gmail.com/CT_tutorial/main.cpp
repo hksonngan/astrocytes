@@ -213,7 +213,7 @@ void KeyButton ( int key, int state )
 			*/
 			Geometry*g0;
 			int psd_id=cur_psd;
-			vec3 c = cam.GetPosition();//psd[psd_id].fl.d+vec3(0.001f);
+			vec3 c = psd[psd_id].fl.d;
 			float rad = psd[psd_id].mediator_radius;
 
 			
@@ -243,7 +243,10 @@ void KeyButton ( int key, int state )
 			
 
 			printf("\n%g sec S(%g) V(%g) %g",glfwGetTime ( )-start,s1,v1,s1/v1);
+			g->BuildRep2();
+			g1->BuildRep2();
 			//
+			
 			start = glfwGetTime ( );
 			g0=new Geometry();
 			
@@ -364,8 +367,8 @@ void SetupGL()
 		glewInit();
 	#endif
 	//glClearColor(0.6,0.7,1,1);
-	//glClearColor(0,0,0,1);
-	glClearColor(1,1,1,1);
+	glClearColor(0,0,0,1);
+	//glClearColor(1,1,1,1);
 	//glShadeModel(GL_FLAT);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
@@ -407,6 +410,8 @@ void initIVP()
 
 	float ss = mc_CalcVolume(&gg,vec3(0.0),1.5);
 */	
+	LoadPainting("painting_svr");
+	PaintTrue(1.0f/30);
 }
 
 int main ( void )

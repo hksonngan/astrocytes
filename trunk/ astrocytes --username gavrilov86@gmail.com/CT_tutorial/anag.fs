@@ -27,6 +27,7 @@ void main()
 {
 	
 	mat3 m_anag = mat3(RFrom,GFrom,BFrom);
+	/*
 	if(abs(int(color.x/5.0)*5.0-color.x)<0.5f)color=vec4(1.0,1.0,1.0,1.0);else
 	{
 	if(color.x<=0)color=vec4(0.0,0.0,0.0,1.0);else
@@ -35,7 +36,7 @@ void main()
 		if(color.x<lm){color=vec4(lm/40.0,0.0,1.0-lm/40.0,1.0);break;}
 	}
 	}
-	
+	*/
 	gl_FragColor = vec4(Phong(vertex,normal,color.xyz)*m_anag,color.w);
 	
 }

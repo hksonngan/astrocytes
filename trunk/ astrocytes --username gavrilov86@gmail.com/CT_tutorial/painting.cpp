@@ -130,8 +130,8 @@ void PaintTrue(float brightness)
 		if(g->vert_val[i]>=0)
 		{
 			float cl = g->vert_val[i];
-			//cl = min(1,cl*brightness);
-			//g->vert_col[i].set(cl,0,1-cl,1);
+			cl = min(1,cl*brightness);
+			g->vert_col[i].set(cl,0,1-cl,1);
 /*
 			if(cl<5)g->vert_col[i].set(0,0,1,1);else
 			if(cl<10)g->vert_col[i].set(0.5,0.5,1,1);else
@@ -139,10 +139,10 @@ void PaintTrue(float brightness)
 			if(cl<20)g->vert_col[i].set(1,1,0,1);else
 			g->vert_col[i].set(1,0,0,1);
 			*/
-			g->vert_col[i].set(cl,0,0,1);
+			//g->vert_col[i].set(cl,0,0,1);
 		}else
 			//g->vert_col[i] = g->color;
-			g->vert_col[i].set(0,0,0,1);
+			g->vert_col[i].set(0.3,0.3,0.3,1);
 
 
 	}
