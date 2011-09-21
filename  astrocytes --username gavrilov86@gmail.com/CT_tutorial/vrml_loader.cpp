@@ -141,7 +141,7 @@ void OpenString(std::ifstream& fs,std::string& str)
 
 void AddGeom(std::string fn,vec4 cl,int id)
 {
-	printf("\n%s\n",fn.c_str());
+	//printf("\n%s\n",fn.c_str());
 	neuron[id].push_back(Geometry(cl));
 	int g_id = neuron[id].size()-1;
 	Geometry*g = &neuron[id][g_id];
@@ -153,7 +153,8 @@ void AddGeom(std::string fn,vec4 cl,int id)
 	}
 	//if(id==1)edist.push_back(Edist(g));
 	//if(id==3)
-		g->UpdateBox();
+	g->UpdateBox();
+	if(id==3)g->visible=0;
 	if(id==1)
 	{
 		psd.push_back(PSD(g));

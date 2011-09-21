@@ -73,7 +73,7 @@ vec3 MoveDot(int x,int y,vec3 dot)
 void MouseMove ( int x, int y )
 {
 	mouse.Move(x,y);
-
+light.set(-cam.GetNav().x,-cam.GetNav().y,-cam.GetNav().z,0);
 	{
 		
 		if(keyboard['R'])
@@ -99,7 +99,7 @@ void MouseMove ( int x, int y )
 
 	}
 
-	if(mouse.btn&2)
+	if(mouse.btn&2 || mouse.btn&1)
 	{
 		vec3 old_pos = cam.GetPosition();
 		vec3 a_dx = cam.GetTop();			float an_x = -PI*mouse.oldy/float(height)+HALF_PI;			mat34 mrx(cos(an_x),sin(an_x),cam.GetLeft());			a_dx = mrx.MultRot(a_dx);			cam.Rotate(mouse.dx*0.004,a_dx);
@@ -151,15 +151,17 @@ void KeyButton ( int key, int state )
 		{
 			cur_psd = (cur_psd+1)%psd.size();
 			
-			cam.ToCoordSystem2(CS3(psd[cur_psd].fl.d,psd[cur_psd].front,psd[cur_psd].left,psd[cur_psd].fl.n*(-1)));
-			cam.SetDistance(2);
+			//cam.ToCoordSystem2(CS3(psd[cur_psd].fl.d,psd[cur_psd].front,psd[cur_psd].left,psd[cur_psd].fl.n*(-1)));
+			//cam.SetDistance(2);
+			cam.SetCenter(psd[cur_psd].fl.d);
 			printf("\n[%d] ",cur_psd);
 		}
 		if(key==',')
 		{
 			cur_psd = (cur_psd-1+psd.size())%psd.size();
-			cam.ToCoordSystem2(CS3(psd[cur_psd].fl.d,psd[cur_psd].front,psd[cur_psd].left,psd[cur_psd].fl.n*(-1)));
-			cam.SetDistance(2);
+			//cam.ToCoordSystem2(CS3(psd[cur_psd].fl.d,psd[cur_psd].front,psd[cur_psd].left,psd[cur_psd].fl.n*(-1)));
+			//cam.SetDistance(2);
+			cam.SetCenter(psd[cur_psd].fl.d);
 			printf("\n[%d] ",cur_psd);
 		}
 
@@ -349,6 +351,7 @@ void KeyButton ( int key, int state )
 		}
 	}
 	
+	
 }
 
 //обработчик вращения колёсика мыши
@@ -366,8 +369,8 @@ void SetupGL()
 	#ifdef USE_GLEW
 		glewInit();
 	#endif
-	//glClearColor(0.6,0.7,1,1);
-	glClearColor(0,0,0,1);
+	glClearColor(0.6,0.7,1,1);
+	//glClearColor(0,0,0,1);
 	//glClearColor(1,1,1,1);
 	//glShadeModel(GL_FLAT);
 	glEnable(GL_COLOR_MATERIAL);
@@ -400,6 +403,7 @@ void initIVP()
 
 	LoadNeuron();
 	//boolean//seg_BuildBox();
+	cam.SetCenter(psd[cur_psd].fl.d);
 	cam.SetDistance(5.5f);
 	
 	
@@ -419,6 +423,12 @@ int main ( void )
 	glfwInit ( );
 	
 //	printf("Do you want to run program in fullscreen mode? [Y/N]\n");
+	printf("[S] - toggle smoothing\n");
+	printf("[>] - to next PSD\n");
+	printf("[<] - to previous PSD\n");
+	printf("[0] - show/hide astrocytes\n");
+	printf("[1] - show/hide PSD\n");
+	printf("[3] - show/hide dendrite spinuliferous\n");
 
 	int choice = 0;//getchar ( );
 
