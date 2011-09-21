@@ -17,7 +17,7 @@
 
 
 vec4 light(1,0,0,0);
-bool smoothing=0,draw_boxes=0;
+bool smoothing=1,draw_boxes=0;
 bool shaders_is=1,anag_left=0;
 
 extern ivec2 old_mouse_pos;
@@ -127,6 +127,7 @@ void DrawScene()
 	for(int i=0;i<flat_section.size();i++)
 		flat_section[i].Draw();
 
+	/*
 	if(mouse.btn&1)
 	{
 		glDisable(GL_LIGHTING);
@@ -137,7 +138,7 @@ void DrawScene()
 		DrawRectangle(vec2(old_mouse_pos.x,old_mouse_pos.y),vec2(mouse.oldx,mouse.oldy));
 		End2D();
 		glEnable(GL_DEPTH_TEST);
-	}
+	}*/
 
 }
 

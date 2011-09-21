@@ -39,7 +39,7 @@ flat CalcFlat(v3vec vert)
 	float www=0;
 	res.d.set(0,0,0);
 	res.n.set(0,0,0);
-	printf("%d+++",vert.size());
+	//printf("%d+++",vert.size());
 	if(vert.size()>2)
 	//for(int i=0;i<vert.size()-2;i++)
 	//for(int j=i+1;j<vert.size()-1;j++)
@@ -135,5 +135,5 @@ void PSD::Draw()
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LINE_SMOOTH);
 	glColor3d(0.5,0.5,0.5);
-	DrawSphere(fl.d,mediator_radius);
+	//DrawSphere(fl.d,mediator_radius);
 }
