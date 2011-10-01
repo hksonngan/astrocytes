@@ -80,10 +80,11 @@ light.set(-cam.GetNav().x,-cam.GetNav().y,-cam.GetNav().z,0);
 		{
 			//psd[cur_psd].mediator_radius += (mouse.dx+mouse.dy)*0.01f;
 			
-			psd[cur_psd].mediator_radius *= (mouse.dx+mouse.dy>0)?1.1:0.9;
+			sect_radius *= (mouse.dx+mouse.dy>0)?1.02:0.98;
 
-			if(psd[cur_psd].mediator_radius<0)psd[cur_psd].mediator_radius=0;
-			printf("%g\n",psd[cur_psd].mediator_radius);
+			if(sect_radius<0.01)sect_radius=0.01;
+			printf("%g\n",sect_radius);
+			
 			
 		}
 		if(keyboard['W'])
@@ -214,9 +215,9 @@ void KeyButton ( int key, int state )
 			}
 			*/
 			Geometry*g0;
-			int psd_id=cur_psd;
-			vec3 c = psd[psd_id].fl.d;
-			float rad = psd[psd_id].mediator_radius;
+			//int psd_id=cur_psd;
+			vec3 c = cam.GetCenter();
+			float rad = sect_radius;
 
 			
 			Geometry*g=&neuron[2][0];
@@ -244,10 +245,11 @@ void KeyButton ( int key, int state )
 			
 			
 
-			printf("\n%g sec S(%g) V(%g) %g",glfwGetTime ( )-start,s1,v1,s1/v1);
+			printf("\n%g sec\n white surface square = %g mcm2\n section volume = %g mcm3\n S/V = %g mcm-1\n\n",glfwGetTime ( )-start,s1,v1,s1/v1);
+			
 			g->BuildRep2();
 			g1->BuildRep2();
-			//
+			/*
 			
 			start = glfwGetTime ( );
 			g0=new Geometry();
@@ -264,7 +266,7 @@ void KeyButton ( int key, int state )
 
 			delete g0;
 			printf("\n%g sec S(%g) V(%g|%g) %g|  %g",glfwGetTime ( )-start,s1,v1,v1-v2,s1/v1,s1/v1-s2/v2);
-			
+			*/
 			//
 			
 
@@ -426,9 +428,12 @@ int main ( void )
 	printf("[S] - toggle smoothing\n");
 	printf("[>] - to next PSD\n");
 	printf("[<] - to previous PSD\n");
+	printf("[X] - perform the astrocytes section by the sphere\n\n");
 	printf("[0] - show/hide astrocytes\n");
 	printf("[1] - show/hide PSD\n");
-	printf("[3] - show/hide dendrite spinuliferous\n");
+	printf("[2] - show/hide the section\n");
+	printf("[3] - show/hide dendrite spinuliferous\n\n");
+	printf("[R]+mouse movement - change the sphere radius\n");
 
 	int choice = 0;//getchar ( );
 

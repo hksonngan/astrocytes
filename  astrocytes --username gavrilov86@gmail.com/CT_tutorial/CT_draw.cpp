@@ -21,7 +21,7 @@ bool smoothing=1,draw_boxes=0;
 bool shaders_is=1,anag_left=0;
 
 extern ivec2 old_mouse_pos;
-
+float sect_radius=0.6;
 
 
 void DrawScene()
@@ -78,6 +78,7 @@ void DrawScene()
 	//glColor4d(0.1,0.5,0.1,0.5);	for(int i=1;i<200;i++)		DrawCircle(0.1*i,vec2(0),45);
 
 	psd[cur_psd].Draw();
+	
 /*
 	glPointSize(12);
 	glColor4d(0.1,0.5,0.1,0.5);
@@ -124,6 +125,12 @@ void DrawScene()
 	}
 	if(shaders_is) sp.UnUse();
 
+	glColor4d(0,0,0,0.2f);
+	DrawSphere(cam.GetCenter(),sect_radius);
+	glCullFace(GL_FRONT);
+	DrawSphere(cam.GetCenter(),sect_radius);
+
+glCullFace(GL_BACK);
 	for(int i=0;i<flat_section.size();i++)
 		flat_section[i].Draw();
 

@@ -48,7 +48,7 @@ extern int total_tr,total_v;
 
 extern std::vector<FlatSection> flat_section;
 
-
+extern float sect_radius;
 
 void MakeScreenShot(std::string screenshot_dst);
 
