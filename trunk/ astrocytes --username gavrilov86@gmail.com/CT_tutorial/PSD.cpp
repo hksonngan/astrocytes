@@ -87,7 +87,7 @@ PSD::PSD(Geometry* n_target):target(n_target)
 void PSD::Draw()
 {
 	glDisable(GL_LIGHTING);
-	glDisable(GL_LINE_SMOOTH);
+	
 	/*
 	vec3 l1=fl.d;
 	vec3 l2=fl.d+fl.n;
@@ -133,7 +133,6 @@ void PSD::Draw()
 
 	//glLineWidth(1);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LINE_SMOOTH);
 	glColor3d(0.5,0.5,0.5);
 	//DrawSphere(fl.d,mediator_radius);
 }

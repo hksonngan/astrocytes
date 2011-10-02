@@ -381,8 +381,7 @@ void SetupGL()
 
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-	glEnable(GL_LINE_SMOOTH);
-	glEnable(GL_POLYGON_SMOOTH);
+	glDisable(GL_LINE_SMOOTH);
 	glCullFace(GL_BACK);
 	
 	glEnable(GL_BLEND);
