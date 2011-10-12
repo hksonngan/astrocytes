@@ -478,8 +478,8 @@ void Geometry::Draw()
 			tt = &tr[i];
 			glNormal3fv(&tt->norm.x);
 			glVertex3fv(&tt->v->x);
-			glVertex3fv(&(tt->v+2)->x);
 			glVertex3fv(&(tt->v+1)->x);
+			glVertex3fv(&(tt->v+2)->x);
 		}
 		glEnd();
 	}else
@@ -518,9 +518,21 @@ void Geometry::DrawBoxes()
 		glEnable(GL_LIGHTING);
 	}
 }
+void Geometry::UpdateVboMesh()
+{
+	vbo_mesh.Build(vert,norm,vert_col,face);
+}
+void Geometry::BuildSmoothed(Geometry*g)
+{
 
+}
 void Geometry::Draw2()
 {
+	if(vbo_mesh.Enabled())
+	{
+		vbo_mesh.Draw();
+		return;
+	}
 	bool col = (vert_col.size()==vert.size());
 	bool nrm = (norm.size()==vert.size());
 	if(!visible)return;
@@ -535,13 +547,13 @@ void Geometry::Draw2()
 		if(col)glColor4fv(&vert_col[face[i].x].x);
 		glVertex3fv(&vert[face[i].x].x);
 
-		if(nrm)glNormal3fv(&norm[face[i].z].x);
-		if(col)glColor4fv(&vert_col[face[i].z].x);
-		glVertex3fv(&vert[face[i].z].x);
-
 		if(nrm)glNormal3fv(&norm[face[i].y].x);
 		if(col)glColor4fv(&vert_col[face[i].y].x);
 		glVertex3fv(&vert[face[i].y].x);
+
+		if(nrm)glNormal3fv(&norm[face[i].z].x);
+		if(col)glColor4fv(&vert_col[face[i].z].x);
+		glVertex3fv(&vert[face[i].z].x);
 	}
 	glEnd();
 	if(!nrm){glEnable(GL_LIGHTING); glEnable(GL_CULL_FACE);}

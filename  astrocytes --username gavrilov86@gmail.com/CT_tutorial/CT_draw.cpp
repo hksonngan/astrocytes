@@ -127,10 +127,10 @@ void DrawScene()
 
 	glColor4d(0,0,0,0.2f);
 	DrawSphere(cam.GetCenter(),sect_radius);
-	glCullFace(GL_FRONT);
+glCullFace(GL_BACK);	
 	DrawSphere(cam.GetCenter(),sect_radius);
+glCullFace(GL_FRONT);
 
-glCullFace(GL_BACK);
 	for(int i=0;i<flat_section.size();i++)
 		flat_section[i].Draw();
 
