@@ -6,7 +6,7 @@
 #include "vec4.h"
 #include "vec.h"
 #include "CS3.h"
-
+#include "VboMesh.h"
 
 
 struct Boxes
@@ -56,6 +56,7 @@ public:
 	void Draw2();
 	void DrawBoxes();
 	void renull();
+	void UpdateVboMesh();
 
 	void InvertNormals();//инвертировать нормали
 
@@ -76,6 +77,7 @@ public:
 
 	v4vec vert_col;
 
+	VboMesh vbo_mesh;
 	
 	void UpdateBox();//обновить bounding box(описывающий геометрию параллелепипед)
 	vec3 box1,box2;//bounding box

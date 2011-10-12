@@ -145,6 +145,10 @@ void PaintTrue(float brightness)
 			g->vert_col[i].set(0.3,0.3,0.3,1);
 
 
+		Geometry g1;
+		g1.BuildSmoothed(g);
+		
+		g->vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
 	}
 }
 #define MAX_SVR 100

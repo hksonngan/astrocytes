@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\VboMesh.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\view_sect.cpp"
 				>
 			</File>
@@ -362,6 +366,10 @@
 			</File>
 			<File
 				RelativePath=".\table.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VboMesh.h"
 				>
 			</File>
 			<File

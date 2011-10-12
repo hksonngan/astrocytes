@@ -80,7 +80,7 @@ light.set(-cam.GetNav().x,-cam.GetNav().y,-cam.GetNav().z,0);
 		{
 			//psd[cur_psd].mediator_radius += (mouse.dx+mouse.dy)*0.01f;
 			
-			sect_radius *= (mouse.dx+mouse.dy>0)?1.02:0.98;
+			sect_radius += (mouse.dx+mouse.dy)*0.01;
 
 			if(sect_radius<0.01)sect_radius=0.01;
 			printf("%g\n",sect_radius);
@@ -382,7 +382,7 @@ void SetupGL()
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 	glDisable(GL_LINE_SMOOTH);
-	glCullFace(GL_BACK);
+	glCullFace(GL_FRONT);
 	
 	glEnable(GL_BLEND);
 	
