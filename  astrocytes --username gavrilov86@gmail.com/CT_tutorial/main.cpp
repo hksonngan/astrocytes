@@ -172,10 +172,23 @@ void KeyButton ( int key, int state )
 		if(key=='H')
 		{
 			CalcHist1();
-			CalcHist3();
+			//CalcHist3();
 			
 		}
 		if(key=='Z')PaintAs(cam.GetPosition(),0.6);
+		if(key=='Y')
+		{
+			Geometry*g0=&neuron[2][0];
+			g0->renull();
+			g0->color.set(1,1,1,1);
+			
+			for(int as=0;as<neuron[0].size();as++)
+			{
+				GetInSphere(&neuron[0][as],cam.GetCenter(),sect_radius,g0);
+				
+			}
+			
+		}
 		if(key=='X')
 		{
 			
@@ -326,7 +339,7 @@ void KeyButton ( int key, int state )
 		
 		double start = glfwGetTime ( );
 		//while(1)
-			for(int rd=22;rd<25;rd++)
+			for(int rd=5;rd<25;rd++)
 			{
 				for(int i=0;i<psd.size();i++)
 				//for(int i=0;i<1;i++)
@@ -415,8 +428,9 @@ void initIVP()
 
 	float ss = mc_CalcVolume(&gg,vec3(0.0),1.5);
 */	
-	LoadPainting("painting_svr");
+	
 	PaintTrue(1.0f/30);
+	
 }
 
 int main ( void )

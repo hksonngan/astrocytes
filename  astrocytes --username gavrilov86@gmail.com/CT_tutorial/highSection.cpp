@@ -122,8 +122,8 @@ void GetSection(Geometry*target,Geometry*section,Geometry*res,bool inside_sectio
 
 }
 
-
-void GetInSphere(Geometry*target,vec3 c,float rad,Geometry*res)
+// всё то, что внутри сферы.
+void GetInSphere0(Geometry*target,vec3 c,float rad,Geometry*res)
 {
 	Triangle cur_tr;
 	vec3 b1 = c-vec3(rad);
@@ -142,6 +142,68 @@ void GetInSphere(Geometry*target,vec3 c,float rad,Geometry*res)
 
 				}
 			}
+
+}
+int GetNearest(v3vec& vert,vec3 pt)
+{
+	int res=0;
+	float mll = pt.lengthSQR(vert[0]);
+	for(int i=1;i<vert.size();i++)
+	{
+		float ll = pt.lengthSQR(vert[i]);
+		if(ll<mll){mll=ll;res = i;}
+	}
+	return res;
+}
+void ChooseComponent(v3vec& src_vert,iv3vec& src_face,v3vec& dst_vert,iv3vec& dst_face,int src_vert_id)
+{
+	//printf(" %d < %d ",src_vert_id,src_vert.size());
+	bvec incl,fincl;
+	incl.resize(src_vert.size());
+	fincl.resize(src_face.size());
+	for(int i=0;i<src_face.size();i++)
+		fincl[i]=0;
+	for(int i=0;i<src_vert.size();i++)
+		incl[i] = (i==src_vert_id);
+	dst_vert = src_vert;
+	bool was_added;
+	while(1)
+	{
+		was_added=0;
+		for(int i=0;i<src_face.size();i++)
+		{
+			ivec3 ff = src_face[i];
+			if((incl[ff.x] || incl[ff.y] || incl[ff.z]) &&(!fincl[i]))
+			{
+				fincl[i]=1;
+				was_added=1;
+				incl[ff.x]=incl[ff.y]=incl[ff.z]=1;
+				dst_face.push_back(ff);
+			}
+		}
+
+		if(!was_added)break;
+	}
+	
+}
+// всё то, что внутри сферы. центр сферы определяет связную компоненту, еднственно которую оставляем
+void GetInSphere(Geometry*target,vec3 c,float rad,Geometry*res)
+{
+	iv3vec face;
+	v3vec vert;
+	Geometry tmpg;
+	GetInSphere0(target, c, rad,&tmpg);
+	tmpg.BuildRep2();
+
+	if(!tmpg.vert.size())return;
+	int v_id = GetNearest(tmpg.vert,c);
+	
+	ChooseComponent(tmpg.vert,tmpg.face,vert,face,v_id);
+	for(int i=0;i<face.size();i++)
+	{
+		
+		res->AddTriangle(vert[face[i].x],vert[face[i].y],vert[face[i].z]);
+	}
 
 }
 void GetAorB(Geometry*a,Geometry*b,Geometry*res)

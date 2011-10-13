@@ -524,7 +524,7 @@ void Geometry::UpdateVboMesh()
 }
 void Geometry::BuildSmoothed(Geometry*g)
 {
-	for(int i=0;)
+	//for(int i=0;)
 
 }
 void Geometry::Draw2()

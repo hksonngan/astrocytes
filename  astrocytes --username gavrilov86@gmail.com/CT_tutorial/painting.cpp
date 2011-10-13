@@ -7,6 +7,8 @@
 #include "tbb/blocked_range2d.h"
 #include "tbb/tick_count.h"
 
+float painting_rad=0.3;
+std::string painting_svr_fn = "painting_svr_300";
 
 float CalcSVR(vec3 cc,float rr)
 {
@@ -95,11 +97,13 @@ void SavePainting(std::string fn)
 void LoadPainting(std::string fn)
 {
 	std::ifstream fs1(fn.c_str(),std::ios::in | std::ios::binary);
-	if(!fs1)return;
+	
+	
 	for(int as=0;as<neuron[0].size();as++)
 	{
 		Geometry*g=&neuron[0][as];
 
+		if(!fs1){g->vert_val.resize(g->vert.size());for(int i=0;i<g->vert.size();i++)g->vert_val[i]=-1;}else
 		OpenVector(fs1,g->vert_val);
 	}
 	fs1.close();
@@ -109,7 +113,8 @@ void LoadPainting(std::string fn)
 void PaintTrue(float brightness)
 {
 	float max_svr=0;
-	LoadPainting("painting_svr");
+	LoadPainting(painting_svr_fn);
+	
 	for(int as=0;as<neuron[0].size();as++)
 	{
 		Geometry*g=&neuron[0][as];
@@ -146,9 +151,9 @@ void PaintTrue(float brightness)
 
 
 		Geometry g1;
-		g1.BuildSmoothed(g);
-		
-		g->vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
+//		g1.BuildSmoothed(g);
+//		g->vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
+		g->vbo_mesh.Build(g->vert,g->norm,g->vert_col,g->face);
 	}
 }
 #define MAX_SVR 100
@@ -157,7 +162,7 @@ void PaintAs(vec3 cc,float rr)
 	srand(glfwGetTime());
 	int total_iters=0,it_l;
 	
-	LoadPainting("painting_svr");
+	LoadPainting(painting_svr_fn);
 	
 	for(int as=0;as<neuron[0].size();as++)
 	{
@@ -189,17 +194,17 @@ void PaintAs(vec3 cc,float rr)
 			{
 				//if(g->vert_val[i]==0 || g->vert_val[i]>MAX_SVR)printf("-");
 
-				float svr = mc_CalcSVR(g->vert[i],0.6f ,g->vert[i]+g->norm[i]*0.0001f,0);
+				float svr = mc_CalcSVR(g->vert[i],painting_rad ,g->vert[i]+g->norm[i]*0.01f,0);
 				//float svr1 = mc_CalcSVR(g->vert[i],0.6f,g->vert[i]+g->norm[i]*0.0001f,0);
 				if(svr>0)g->vert_val[i] = svr;
 
 				it_l--;
-				if(!(it_l%10))SavePainting("painting_svr");
+				if(!(it_l%10))SavePainting(painting_svr_fn);
 					
 				printf("%g min {%g}\n",(it_l*(glfwGetTime ( )-start1)/(total_iters-it_l))/60,svr);
 			}
 
 	}
-	SavePainting("painting_svr");
+	SavePainting(painting_svr_fn);
 	//PaintTrue(1);
 }
