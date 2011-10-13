@@ -50,6 +50,7 @@ extern std::vector<FlatSection> flat_section;
 
 extern float sect_radius;
 
+extern std::string painting_svr_fn;
 void MakeScreenShot(std::string screenshot_dst);
 
 #endif

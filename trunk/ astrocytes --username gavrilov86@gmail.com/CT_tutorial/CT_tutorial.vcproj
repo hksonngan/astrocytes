@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fill_paint_hist.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FlatSection.cpp"
 				>
 			</File>
