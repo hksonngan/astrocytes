@@ -10,7 +10,7 @@
 
 using namespace tbb;
 
-float *squares,*perimeters;
+//float *squares,*perimeters;
 
 float d0 = 0.02f;
 float d1 = 2.0f;
@@ -24,7 +24,7 @@ int it_num = int((d1-d0)/d_step);
 int opers_left,opers_total;
 double start;
 mutex* progress_mutex;
-
+/*
 void InitProc()
 {
 	static tbb::task_scheduler_init init;
@@ -80,60 +80,96 @@ void Calc()
 
 	delete[]squares;
 	delete[]perimeters;
-}
-void Calc(int psd_id)
+}*/
+void Calc(int psd_id1)
 {
-	/*
-			float cur_d;
+	opers_left =opers_total= it_num*psd.size();
+	float *svrs=new float[it_num*psd.size()];
+	
+	memset(svrs,0,it_num*psd.size()*sizeof(float));
+	
+	float cur_d;
+	Geometry *gg0 = new Geometry(),*gg = new Geometry();
+	Geometry*gs = new Geometry();
 
-			Geometry *gg0 = new Geometry(),*gg = new Geometry();
+	for(int psd_id=0;psd_id<psd.size();psd_id++)
+	{
 
-		
-				gg0->renull();
-				gg->renull();
-				cur_d=d0;
-				edist[psd_id].SetDistance(d1+d_step);
-				edist[psd_id].mesh.BuildRep1();
-				edist[psd_id].mesh.RebuildTrBB2();
-				for(int as=0;as<neuron[0].size();as++)
-				{
-					GetSection(&edist[psd_id].mesh,&neuron[0][as],gg0,1,0);
-					GetSection(&neuron[0][as],&edist[psd_id].mesh,gg0,1,0);
-				}
-				gg0->RebuildTrBB();
-				gg0->RebuildTrBB2();
-		
-				for(int i=0;i<it_num;i++)
-				{
-					int id = i+psd_id*it_num;
-					float pp=0;
-					gg->renull();
-					edist[psd_id].SetDistance(cur_d);
-					edist[psd_id].mesh.BuildRep1();
-					GetSection(&edist[psd_id].mesh,gg0,gg,1,0,&pp);
-					float ss = gg->CalcArea();
-		
-					float psps = ss ? pp/ss:0;
-					
-					progress_mutex->lock();
-					opers_left--;
-					squares[id]=ss;
-					perimeters[id]=pp;
-					cur_d += d_step;
-					int sc=((opers_left)*(glfwGetTime ( )-start)/(opers_total-opers_left))/60;
-					
-					printf("%d	%d%	%d:%d\n",opers_left,(opers_left*100)/opers_total,sc/60,sc%60);
-					
-					progress_mutex->unlock();
-				}
+		cur_d=d0;
 
+		gs->renull();
+		AddSphere(gs,d1+d_step,20,20);
+		gs->Move(psd[psd_id].fl.d);
+		gs->RebuildTrBB();
+		gs->RebuildTrBB2();
+		gg0->renull();
+		for(int as=0;as<neuron[0].size();as++)
+		{
+			GetSection(gs,&neuron[0][as],gg0,1,0);
+			GetSection(&neuron[0][as],gs,gg0,1,0);
+		}
+		gg0->RebuildTrBB();
+		gg0->RebuildTrBB2();
 			
-			StoreResultsToFile();
+		for(int i=0;i<it_num;i++)
+		{
+			float pp=0;
+			gg->renull();
+			gs->renull();
+			AddSphere(gs,cur_d,20,20);
+			gs->Move(psd[psd_id].fl.d);
+			gs->RebuildTrBB();
+			gs->RebuildTrBB2();
+
+			GetSection(gs,gg0,gg,1,0,&pp);
+			float ss = gg->CalcArea();
+			float svr = ss ? pp/ss:0;
+						
+			opers_left--;
+		
+			svrs[i+psd_id*it_num]=svr;
+			cur_d += d_step;
+			int sc=((opers_left)*(glfwGetTime ( )-start)/(opers_total-opers_left))/60;
+						
+			printf("%dpsd	%dit	%d%	%d:%d\n",psd_id,opers_left,(opers_left*100)/opers_total,sc/60,sc%60);
+						
+		}
+
+				
+	//}
+//
+	Table tbl1(it_num+1,2+psd.size());
+	tbl1.SetValue("Distance",0,0);
+	tbl1.SetValue("avarage SVR",0,1);
+	for(int i=0;i<psd.size();i++)	
+		tbl1.SetValue("PSD_"+str::ToString(i+1),0,i+2);
+	{
+		float cur_d = d0;
+		for(int i=0;i<it_num;i++)
+		{
+			tbl1.SetValue(cur_d,i+1,0);
+			cur_d += d_step;		
+		}
+	}
+	for(int i=0;i<it_num;i++)
+	{
+		//tbl1.SetValue(svrs[i],i+1,1);
+		for(int j=0;j<psd.size();j++)
+		{
+			tbl1.SetValue(svrs[i+j*it_num],i+1,2+j);
+		}
+	}
+	
+	tbl1.StoreToFile("results\\psd_svr.txt");
+	
+	}
+//
 			
 		
-			delete gg;
-			delete gg0;
-			*/
+	delete gg;
+	delete gg0;
+	delete gs;
+	delete[]svrs;
 
 }
 
@@ -270,6 +306,7 @@ void CalcAreas(vec3 d,vec3 x,vec3 y,float rad,float*res,ivec2 res_size)
 		}
 }
 */
+/*
 void CalcAreas(vec3 d,vec3 x,vec3 y,float rad,float*res,ivec2 res_size)
 {
 	InitProc();
@@ -277,30 +314,7 @@ void CalcAreas(vec3 d,vec3 x,vec3 y,float rad,float*res,ivec2 res_size)
 	UnInitProc();
 
 }
-
-void StoreResultsToFile()
-{
-			std::ofstream fs12("output2.txt",std::ios::out | std::ios::binary);
-			fs12 << "Distance	";
-			for(int psd_id=0;psd_id<psd.size();psd_id++)
-				fs12 << "Perimeter"<< psd_id <<"	Square"<< psd_id <<"	PS" << psd_id<<"	";
-			fs12 << std::endl;
-			float cur_d=d0;
-			for(int i=0;i<it_num;i++)
-			{
-				fs12 << cur_d <<"	";
-				for(int psd_id=0;psd_id<psd.size();psd_id++)
-				{
-					int id = i+psd_id*it_num;
-					float psps = squares[id] ? perimeters[id]/squares[id]:0;
-					fs12 << perimeters[id] <<"	"<< squares[id] <<"	"<< psps<< "	";
-
-				}
-				fs12 << std::endl;
-				cur_d+=d_step;
-			}
-			fs12.close();
-}
+*/
 
 /*
 
