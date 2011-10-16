@@ -59,7 +59,7 @@ void CalcHist1()
 		}
 	}
 	
-	max_rad=sqrt(max_rad);
+	max_rad = 0.5;//sqrt(max_rad);
 	printf("\n\n%g %g |",max_rad,max_svr);
 	
 
@@ -89,7 +89,7 @@ void CalcHist1()
 				v[2] -=v[0];
 				float s = vec3::vect_mult(v[2],v[1]).length();
 
-				for(int jj=0;jj<60;jj++)
+				for(int jj=0;jj<160;jj++)
 				{
 					
 					float t1=RND01,t2=RND01;

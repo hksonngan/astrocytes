@@ -30,6 +30,7 @@ int width = 1000, height = 700;
 extern vec4 light;
 int stereo_on=0, anag=0;
 void Calc();
+void Calc(int psd_id);
 void view_sect();
 void view_sect2(flat sc_f,vec3 fd,bool fill);
 
@@ -313,6 +314,7 @@ void KeyButton ( int key, int state )
 		
 		if(key=='C' || key=='V')
 		{
+			/*
 			if(!flat_section.size()){flat_section.push_back(FlatSection());}
 			int psd_id=cur_psd;
 			double start = glfwGetTime ( );
@@ -332,6 +334,8 @@ void KeyButton ( int key, int state )
 
 			delete[]dt;
 			printf("\n%g sec ",glfwGetTime ( )-start);
+			*/
+			Calc(cur_psd);
 		}
 		if(key=='J')
 			//if(0)
