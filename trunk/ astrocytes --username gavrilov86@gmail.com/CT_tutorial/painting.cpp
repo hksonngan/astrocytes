@@ -7,8 +7,8 @@
 #include "tbb/blocked_range2d.h"
 #include "tbb/tick_count.h"
 
-float painting_rad=0.6;
-std::string painting_svr_fn = "painting_svr_600";
+float painting_rad=0.7;
+std::string painting_svr_fn = "painting_svr_700";
 
 float CalcSVR(vec3 cc,float rr)
 {
