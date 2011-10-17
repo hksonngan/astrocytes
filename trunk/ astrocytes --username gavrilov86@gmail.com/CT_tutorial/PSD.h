@@ -6,6 +6,7 @@
 class PSD
 {
 public:
+	PSD(){target=0;}
 	PSD(Geometry* n_target);
 	void Draw();
 
