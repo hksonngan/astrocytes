@@ -68,8 +68,9 @@ flat CalcFlat(v3vec vert)
 
 	return res;
 }
-PSD::PSD(Geometry* n_target):target(n_target)
+PSD::PSD(Geometry* n_target)
 {
+	target=n_target;
 	fl = CalcFlat(target->vert);
 	fl.n.MakeOrtDop(front,left);
 	front.normalize();

@@ -15,6 +15,17 @@ float NearestPSD(vec3 pt,int& psd_id)
 	return minl;
 }
 
+float NearestPSD_sp(vec3 pt,int psd_id)
+{
+	float minl;
+	Geometry*g = &neuron[1][psd_id];//psd[psd_id].target;//
+	for(int j=0;j<g->vert.size();j++)
+	{
+		float ll = pt.lengthSQR(g->vert[j]);
+		if(ll<minl || !j){minl=ll;}
+	}
+	return minl;
+}
 void CalcHist1()
 {
 	
@@ -23,6 +34,7 @@ void CalcHist1()
 	ivec trs;
 	int rad_num=RAD_NUM;
 	float *all_vl=new float[rad_num];
+	float *all_vl2=new float[SVR_NUM];
 	
 	float svr_mid[RAD_NUM];
 	int svr_n[RAD_NUM];
@@ -31,6 +43,7 @@ void CalcHist1()
 	int *svr_n1=new int[psd.size()*RAD_NUM];
 
 	memset(all_vl,0,rad_num*sizeof(float));
+	memset(all_vl2,0,SVR_NUM*sizeof(float));
 	memset(svr_mid,0,rad_num*sizeof(float));
 	memset(svr_n,0,rad_num*sizeof(int));
 	memset(svr_mid1,0,rad_num*sizeof(float)*psd.size());
@@ -38,8 +51,8 @@ void CalcHist1()
 	
 	int svr_num=SVR_NUM;
 	float max_rad=0;
-	float max_svr=SVR_NUM;
-
+	float max_svr=60;
+/*
 	for(int as=0;as<neuron[0].size();as++)
 	{
 		Geometry*g = &neuron[0][as];
@@ -58,7 +71,7 @@ void CalcHist1()
 			}
 		}
 	}
-	
+	*/
 	max_rad = 0.5;//sqrt(max_rad);
 	printf("\n\n%g %g |",max_rad,max_svr);
 	
@@ -73,7 +86,9 @@ void CalcHist1()
 		{
 			ivec3 ff=g->face[i];
 			if((g->vert_val[ff.x]>0)&&(g->vert_val[ff.y]>0)&&(g->vert_val[ff.z]>0))
+			if(NearestPSD(g->vert[ff.x],psd_id)<=max_rad || NearestPSD(g->vert[ff.y],psd_id)<=max_rad || NearestPSD(g->vert[ff.z],psd_id)<=max_rad)
 			{
+				int pID = psd_id;
 //				Triangle tr = g->tr[i];
 //				float s = TriangleArea(tr);
 				vec3 v[3];
@@ -89,7 +104,7 @@ void CalcHist1()
 				v[2] -=v[0];
 				float s = vec3::vect_mult(v[2],v[1]).length();
 
-				for(int jj=0;jj<160;jj++)
+				for(int jj=0;jj<60;jj++)
 				{
 					
 					float t1=RND01,t2=RND01;
@@ -98,7 +113,7 @@ void CalcHist1()
 					float ss = svrs[0] + svrs[1]*t1 + svrs[2]*t2;
 					
 
-					float rr = sqrt(NearestPSD(pt1,psd_id));
+					float rr = sqrt(NearestPSD_sp(pt1,pID));
 					
 					int hi = rad_num*(rr/max_rad);
 					int hj = svr_num*(ss/max_svr);
@@ -108,11 +123,13 @@ void CalcHist1()
 					{
 						hist[hi+hj*rad_num]+=s;
 						all_vl[hi]+=s;
+						all_vl2[hj]+=s;
 
 						svr_mid[hi] = (ss + svr_n[hi]*svr_mid[hi])/(svr_n[hi]+1);
 						svr_n[hi]++;
 
 					}
+					
 					if(hj>=0 && hj<svr_num)
 					for(psd_id=0;psd_id<psd.size();psd_id++)
 					{
@@ -135,9 +152,10 @@ void CalcHist1()
 				}
 			}
 		}
+		
 	}
 	
-
+	
 	Table tbl(rad_num+1,svr_num+1);
 	tbl.SetValue("SVR\\distance",0,0);
 	for(int i=0;i<rad_num;i++)
@@ -149,10 +167,22 @@ void CalcHist1()
 	if(all_vl[i])
 	for(int j=0;j<svr_num;j++)
 	{
-		tbl.SetValue((hist[i+j*rad_num]*100)/float(all_vl[i]),i+1,j+1);
+		tbl.SetValue((float)((hist[i+j*rad_num]*100)/(all_vl[i])),i+1,j+1);
 	}
 	tbl.StoreToFile("results\\hist.txt");
 	
+	for(int j=0;j<svr_num;j++)
+	for(int i=0;i<rad_num;i++)
+		tbl.SetValue("",i+1,j+1);
+
+	for(int j=0;j<svr_num;j++)
+	if(all_vl2[j])
+	for(int i=0;i<rad_num;i++)
+	{
+		tbl.SetValue((float)((hist[i+j*rad_num]*100)/(all_vl2[j])),i+1,j+1);
+	}
+	tbl.StoreToFile("results\\hist2.txt");
+
 //
 	Table tbl1(rad_num+1,2+psd.size());
 	tbl1.SetValue("Distance",0,0);
@@ -164,11 +194,11 @@ void CalcHist1()
 	
 	for(int i=0;i<rad_num;i++)
 	{
-		tbl1.SetValue(svr_mid[i],i+1,1);
+		tbl1.SetValue((float)svr_mid[i],i+1,1);
 		for(int j=0;j<psd.size();j++)
 		{
 			printf("%d %d |",i,j);
-			tbl1.SetValue(svr_mid1[i+j*rad_num],i+1,2+j);
+			tbl1.SetValue((float)svr_mid1[i+j*rad_num],i+1,2+j);
 		}
 	}
 	
@@ -177,6 +207,7 @@ void CalcHist1()
 //
 	delete[]hist;
 	delete[]all_vl;
+	delete[]all_vl2;
 //	printf("111");
 	delete[]svr_n1;
 delete[]svr_mid1;
