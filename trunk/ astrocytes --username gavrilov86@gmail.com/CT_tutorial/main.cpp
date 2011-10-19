@@ -358,19 +358,21 @@ void KeyButton ( int key, int state )
 	{
 		
 		double start = glfwGetTime ( );
-		//while(1)
-			for(int rd=5;rd<25;rd++)
+		for(int r=3;r<=7;r++)
+		{
+				SetPaintingRadius(r*100);
+			//for(int rd=5;rd<25;rd++)
 			{
 				for(int i=0;i<psd.size();i++)
 				//for(int i=0;i<1;i++)
 				{
-					printf("\n------------ %d PSD Rad=%d\n",i,rd);
-					PaintAs(psd[i].fl.d,rd*0.1f);
+			//		printf("\n------------ %d PSD Rad=%d\n",i,rd);
+					PaintAs(psd[i].fl.d,1000*0.1f);
 				}
 				CalcHist1();
 				
 			}
-			
+		}
 		
 		printf("\n%g min ",(glfwGetTime ( )-start)/60);
 	}

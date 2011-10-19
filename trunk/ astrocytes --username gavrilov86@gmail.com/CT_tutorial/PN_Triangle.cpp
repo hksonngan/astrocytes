@@ -1,30 +1,31 @@
 #include "PN_Triangle.h"
 #include "AllDef.h"
 
-
-PN_Triangle::PN_Triangle(vec3 v1,vec3 v2,vec3 v3,vec3 n1,vec3 n2,vec3 n3,vec4 c1,vec4 c2,vec4 c3)
+//tn - are true normals for the correct surface interpolation
+PN_Triangle::PN_Triangle(vec3 v1,vec3 v2,vec3 v3,vec3 tn1,vec3 tn2,vec3 tn3,vec3 n1,vec3 n2,vec3 n3,vec4 c1,vec4 c2,vec4 c3)
 {
 	b300 = v1;
 	b030 = v2;
 	b003 = v3;
 	
-	float w12 = vec3::dot(v2-v1,n1);
-	float w21 = vec3::dot(v1-v2,n2);
-	float w23 = vec3::dot(v3-v2,n2);
-	float w32 = vec3::dot(v2-v3,n3);
-	float w31 = vec3::dot(v1-v3,n3);
-	float w13 = vec3::dot(v3-v1,n1);
+	float w12 = vec3::dot(v2-v1,tn1);
+	float w21 = vec3::dot(v1-v2,tn2);
+	float w23 = vec3::dot(v3-v2,tn2);
+	float w32 = vec3::dot(v2-v3,tn3);
+	float w31 = vec3::dot(v1-v3,tn3);
+	float w13 = vec3::dot(v3-v1,tn1);
 
-	b210 = (v1*2+v2-n1*w12)/3;
-	b120 = (v2*2+v1-n2*w21)/3;
-	b021 = (v2*2+v3-n2*w23)/3;
-	b012 = (v3*2+v2-n3*w32)/3;
-	b102 = (v3*2+v1-n3*w31)/3;
-	b201 = (v1*2+v3-n1*w13)/3;
+	b210 = (v1*2+v2-tn1*w12)/3;
+	b120 = (v2*2+v1-tn2*w21)/3;
+	b021 = (v2*2+v3-tn2*w23)/3;
+	b012 = (v3*2+v2-tn3*w32)/3;
+	b102 = (v3*2+v1-tn3*w31)/3;
+	b201 = (v1*2+v3-tn1*w13)/3;
 	vec3 e = (b210+b120+b201+b102+b021+b012)/6;
 	vec3 v = (v1+v2+v3)/3;
 	b111 = e + (e-v)/2;
 
+//
 	n200 = n1;
 	n020 = n2;
 	n002 = n3;
@@ -38,6 +39,7 @@ PN_Triangle::PN_Triangle(vec3 v1,vec3 v2,vec3 v3,vec3 n1,vec3 n2,vec3 n3,vec4 c1
 	n110.normalize();
 	n101.normalize();
 	n011.normalize();
+//
 	c100 = c1;
 	c010 = c2;
 	c001 = c3;
@@ -71,10 +73,17 @@ vec4 PN_Triangle::GetColor(float u,float v)
 void MakeSmoothed(Geometry*src_g,Geometry*dst_g,int order)
 {
 	if(order<2)return;
+	vec3 nrm[3];
 	for(int i=0;i<src_g->face.size();i++)
 	{
+		for(int ii=0;ii<3;ii++)
+		{
+			nrm[ii] = src_g->norm[src_g->face[i].GetByID(ii)];
+			//if(vec3::dot(nrm[ii] , src_g->tr[i].norm)<0.5)				nrm[ii] = src_g->tr[i].norm;	
+		}
 		PN_Triangle pnt(src_g->vert[src_g->face[i].x],src_g->vert[src_g->face[i].y],src_g->vert[src_g->face[i].z],
 						src_g->norm[src_g->face[i].x],src_g->norm[src_g->face[i].y],src_g->norm[src_g->face[i].z],
+						nrm[0],nrm[1],nrm[2],
 						src_g->vert_col[src_g->face[i].x],src_g->vert_col[src_g->face[i].y],src_g->vert_col[src_g->face[i].z]);
 		int v_offset = dst_g->vert.size();
 
@@ -92,10 +101,10 @@ void MakeSmoothed(Geometry*src_g,Geometry*dst_g,int order)
 		{
 			for(int v=0;v<order-u-1;v++)
 			{
-				int v00 = v_offset+ u*order+v-off0;
-				int v01 = v_offset+ (u+1)*order+v-off1;
-				int v10 = v_offset+ (u)*order+v+1-off0;
-				int v11 = v_offset+ (u+1)*order+v+1-off1;
+				int v00 = v_offset + u*order+v-off0;
+				int v01 = v_offset + (u+1)*order+v-off1;
+				int v10 = v_offset + (u)*order+v+1-off0;
+				int v11 = v_offset + (u+1)*order+v+1-off1;
 				
 				dst_g->face.push_back(ivec3(v00,v01,v10));
 				if(v!=order-u-2)
