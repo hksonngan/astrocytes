@@ -1,14 +1,24 @@
 
 #include "globals.h"
 #include "table.h"
-
+#include "PN_Triangle.h"
 #include "tbb/task_scheduler_init.h"
 #include "tbb/parallel_for.h"
 #include "tbb/blocked_range2d.h"
 #include "tbb/tick_count.h"
 
-float painting_rad=0.6;
-std::string painting_svr_fn = "painting_svr_600";
+float painting_rad=0.7;
+int painting_rad_nm=700;
+std::string painting_svr_fn = "painting_svr_700";
+
+void LoadPainting(std::string fn);
+void SetPaintingRadius(int rad_nm)
+{
+	painting_rad_nm = rad_nm;
+	painting_rad = rad_nm*0.001;
+	painting_svr_fn = "painting_svr_"+str::ToString(rad_nm);
+	LoadPainting(painting_svr_fn);
+}
 
 float CalcSVR(vec3 cc,float rr)
 {
@@ -136,7 +146,8 @@ void PaintTrue(float brightness)
 		{
 			float cl = g->vert_val[i];
 			cl = min(1,cl*brightness);
-			g->vert_col[i].set(cl,0,1-cl,1);
+			//if(g->vert_val[i]>brightness)g->vert_col[i].set(cl,1,1,1);else
+				g->vert_col[i].set(cl,0,1-cl,1);
 /*
 			if(cl<5)g->vert_col[i].set(0,0,1,1);else
 			if(cl<10)g->vert_col[i].set(0.5,0.5,1,1);else
@@ -150,9 +161,9 @@ void PaintTrue(float brightness)
 			g->vert_col[i].set(0.3,0.3,0.3,1);
 
 
-		Geometry g1;
-//		g1.BuildSmoothed(g);
-//		g->vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
+		//Geometry g1;
+		//MakeSmoothed(g,&g1,10);
+		//g->vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
 		g->vbo_mesh.Build(g->vert,g->norm,g->vert_col,g->face);
 	}
 }

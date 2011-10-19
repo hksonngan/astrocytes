@@ -18,7 +18,7 @@
 #include "globals.h"
 #include "table.h"
 #include "painting.h"
-
+#include "PN_Triangle.h"
 
 Mouse mouse;
 Camera cam;
@@ -168,11 +168,27 @@ void KeyButton ( int key, int state )
 		}
 
 		static float rad=0.5;
-		if(key=='T')rad=psd[cur_psd].mediator_radius;
-		if(key=='Q')PaintTrue(psd[cur_psd].mediator_radius);
+		if(key=='T')
+		{
+			for(int i=0;i<neuron.size();i++)
+				//if(i!=2)
+				for(int j=0;j<neuron[i].size();j++)
+					if(neuron[i][j].vert.size())
+				{
+					Geometry g1;
+					MakeSmoothed(&neuron[i][j],&g1,10);
+					neuron[i][j].vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
+				printf("|");
+				}
+		}
+		if(key=='Q')PaintTrue(sect_radius);
 		if(key=='H')
 		{
-			CalcHist1();
+			for(int r=3;r<=7;r++)
+			{
+				SetPaintingRadius(r*100);
+				CalcHist1();
+			}
 			//CalcHist3();
 			
 		}
