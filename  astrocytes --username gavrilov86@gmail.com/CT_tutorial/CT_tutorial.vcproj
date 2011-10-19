@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PN_Triangle.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PSD.cpp"
 				>
 			</File>
@@ -354,6 +358,10 @@
 			</File>
 			<File
 				RelativePath="C:\Documents and Settings\Kola\Рабочий стол\neuro\CT_tutorial\painting.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PN_Triangle.h"
 				>
 			</File>
 			<File
