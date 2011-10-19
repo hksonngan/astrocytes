@@ -5,7 +5,7 @@
 #include "AllDef.h"
 #include "vec3.h"
 #include "Draw.h"
-
+#include "PN_Triangle.h"
 
 bool CrossBoxes(vec3 a1,vec3 a2,vec3 b1,vec3 b2) //пересечение коробок a и b
 {
@@ -528,7 +528,8 @@ void Geometry::BuildSmoothed(Geometry*g)
 
 }
 void Geometry::Draw2()
-{
+{	
+	if(!visible)return;
 	if(vbo_mesh.Enabled())
 	{
 		vbo_mesh.Draw();
@@ -536,7 +537,7 @@ void Geometry::Draw2()
 	}
 	bool col = (vert_col.size()==vert.size());
 	bool nrm = (norm.size()==vert.size());
-	if(!visible)return;
+
 	if(!nrm){glDisable(GL_LIGHTING); glDisable(GL_CULL_FACE);}
 	glBegin(GL_TRIANGLES);
 	for(int i=0;i<(int)face.size();i++)

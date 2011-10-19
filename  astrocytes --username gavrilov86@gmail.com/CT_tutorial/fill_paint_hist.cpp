@@ -2,7 +2,9 @@
 #include "table.h"
 
 #define RAD_NUM 60
-#define SVR_NUM 30
+#define SVR_NUM 360
+
+extern int painting_rad_nm;
 
 float NearestPSD(vec3 pt,int& psd_id)
 {
@@ -80,7 +82,7 @@ void CalcHist1()
 	float *hist=new float[rad_num*svr_num];
 	memset(hist,0,rad_num*svr_num*sizeof(float));
 	for(int as=0;as<neuron[0].size();as++)
-	{
+	{printf("+");
 		Geometry*g = &neuron[0][as];
 		for(int i=0;i<g->face.size();i++)
 		{
@@ -104,7 +106,7 @@ void CalcHist1()
 				v[2] -=v[0];
 				float s = vec3::vect_mult(v[2],v[1]).length();
 
-				for(int jj=0;jj<60;jj++)
+				for(int jj=0;jj<160;jj++)
 				{
 					
 					float t1=RND01,t2=RND01;
@@ -156,7 +158,7 @@ void CalcHist1()
 	}
 	
 	
-	Table tbl(rad_num+1,svr_num+1);
+	Table tbl(rad_num+2,svr_num+2);
 	tbl.SetValue("SVR\\distance",0,0);
 	for(int i=0;i<rad_num;i++)
 		tbl.SetValue((i+1)*max_rad/rad_num,i+1,0);
@@ -169,19 +171,26 @@ void CalcHist1()
 	{
 		tbl.SetValue((float)((hist[i+j*rad_num]*100)/(all_vl[i])),i+1,j+1);
 	}
-	tbl.StoreToFile("results\\hist.txt");
+	tbl.StoreToFile("results\\hist_"+str::ToString(painting_rad_nm)+".txt");
 	
 	for(int j=0;j<svr_num;j++)
 	for(int i=0;i<rad_num;i++)
 		tbl.SetValue("",i+1,j+1);
 
+	float svr_summ=0;
+	for(int j=0;j<svr_num;j++)
+		svr_summ+=all_vl2[j];
+
 	for(int j=0;j<svr_num;j++)
 	if(all_vl2[j])
-	for(int i=0;i<rad_num;i++)
 	{
-		tbl.SetValue((float)((hist[i+j*rad_num]*100)/(all_vl2[j])),i+1,j+1);
+		for(int i=0;i<rad_num;i++)
+		{
+			tbl.SetValue((float)((hist[i+j*rad_num]*100)/(all_vl2[j])),i+1,j+1);
+		}
+		tbl.SetValue((float)(all_vl2[j]/svr_summ),rad_num+1,j+1);
 	}
-	tbl.StoreToFile("results\\hist2.txt");
+	tbl.StoreToFile("results\\hist2_"+str::ToString(painting_rad_nm)+".txt");
 
 //
 	Table tbl1(rad_num+1,2+psd.size());
@@ -197,20 +206,24 @@ void CalcHist1()
 		tbl1.SetValue((float)svr_mid[i],i+1,1);
 		for(int j=0;j<psd.size();j++)
 		{
-			printf("%d %d |",i,j);
+//			printf("%d %d |",i,j);
 			tbl1.SetValue((float)svr_mid1[i+j*rad_num],i+1,2+j);
 		}
 	}
 	
-	tbl1.StoreToFile("results\\graphic1.txt");
-
+	tbl1.StoreToFile("results\\graphic1_"+str::ToString(painting_rad_nm)+".txt");
+printf("g");
 //
 	delete[]hist;
+	printf("a");
 	delete[]all_vl;
+	printf("b");
 	delete[]all_vl2;
-//	printf("111");
+	printf("c");
 	delete[]svr_n1;
-delete[]svr_mid1;
+	printf("d");
+//delete[]svr_mid1;
+	printf("e");
 
 }
 

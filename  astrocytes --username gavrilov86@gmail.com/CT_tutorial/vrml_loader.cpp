@@ -16,8 +16,9 @@ bool TryLoadBin(Geometry& g, std::string fn)
 	OpenVector(fs1,g.vert);
 	OpenVector(fs1,g.face);
 	OpenVector(fs1,g.norm);
-
-
+	g.vert_col.resize(g.vert.size());
+	for(int i=0;i<g.vert.size();i++)
+		g.vert_col[i] = g.color;
 	//g.UpdateBox();
 	
 	total_tr += g.tr.size();
@@ -97,7 +98,9 @@ void vrml_LoadMesh(Geometry& g, std::string fn)
 		g.norm[i].normalize();
 	}
 	printf("c");
-	
+	g.vert_col.resize(g.vert.size());
+	for(int i=0;i<g.vert.size();i++)
+		g.vert_col[i] = g.color;
 
 
 
@@ -188,7 +191,7 @@ void LoadNeuron()
 	for(int i=0;i<5;i++)	AddGeom("wrl//as"+str::ToString(i+1)+".wrl",		vec4(0.4*RND01,1.0,0.7*RND01,1),0);
 
 	vec4 d_col(0.7,0.7,0.7,1);
-	vec4 psd_col(0.4,0.4,0.4,1);
+	vec4 psd_col(1.0,1.0,0.4,1);
 	
 //m
 	for(int i=1;i<=16;i++)		AddGeom("wrl//m"+str::ToString(i)+".wrl",	d_col	,3);
