@@ -522,11 +522,7 @@ void Geometry::UpdateVboMesh()
 {
 	vbo_mesh.Build(vert,norm,vert_col,face);
 }
-void Geometry::BuildSmoothed(Geometry*g)
-{
-	//for(int i=0;)
 
-}
 void Geometry::Draw2()
 {	
 	if(!visible)return;
