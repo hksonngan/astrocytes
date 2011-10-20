@@ -37,7 +37,11 @@ void view_sect2(flat sc_f,vec3 fd,bool fill);
 void FullDraw();
 
 
-std::vector<std::vector<Geometry>> neuron;//0-astr,1-psd,2-for testing, 3-dendrits
+//0-astr,1-psd,2-for testing, 3-dendrits
+//4-CaDepo 5-mitohondria
+std::vector<std::vector<Geometry>> neuron;
+
+
 //std::vector<Edist> edist;
 std::vector<PSD> psd;
 std::vector<Line> section;
@@ -176,7 +180,7 @@ void KeyButton ( int key, int state )
 					if(neuron[i][j].vert.size())
 				{
 					Geometry g1;
-					MakeSmoothed(&neuron[i][j],&g1,10);
+					MakeSmoothed(&neuron[i][j],&g1,5);
 					neuron[i][j].vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
 				printf("|");
 				}
@@ -358,7 +362,8 @@ void KeyButton ( int key, int state )
 	{
 		
 		double start = glfwGetTime ( );
-		for(int r=3;r<=7;r++)
+		//for(int r=3;r<=7;r++)
+		for(int r=7;r>=3;r--)
 		{
 				SetPaintingRadius(r*100);
 			//for(int rd=5;rd<25;rd++)

@@ -43,8 +43,6 @@ public:
 	
 	float CalcVolume();
 	float CalcArea();
-
-	void BuildSmoothed(Geometry*g);//g is a source
 	void SetNormOutOf(vec3 c);//инвертировать нормали, смотрящие на точку c
 
 	void Move(vec3 d);

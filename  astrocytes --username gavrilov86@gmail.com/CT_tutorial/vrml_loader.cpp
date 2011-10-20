@@ -144,6 +144,10 @@ void OpenString(std::ifstream& fs,std::string& str)
 
 void AddGeom(std::string fn,vec4 cl,int id)
 {
+	std::ifstream fs1(fn.c_str(),std::ios::in | std::ios::binary);
+	if(!fs1)return;
+	fs1.close();
+
 	//printf("\n%s\n",fn.c_str());
 	neuron[id].push_back(Geometry(cl));
 	int g_id = neuron[id].size()-1;
@@ -185,13 +189,15 @@ void AddGeom(std::string fn,vec4 cl,int id)
 
 void LoadNeuron()
 {
-	neuron.resize(4);
+	neuron.resize(6);
 
 	
 	for(int i=0;i<5;i++)	AddGeom("wrl//as"+str::ToString(i+1)+".wrl",		vec4(0.4*RND01,1.0,0.7*RND01,1),0);
 
 	vec4 d_col(0.7,0.7,0.7,1);
 	vec4 psd_col(1.0,1.0,0.4,1);
+	vec4 ca_col(0.7,0.9,0.3,1);
+	vec4 mit_col(0.5,0.0,0.4,1);
 	
 //m
 	for(int i=1;i<=16;i++)		AddGeom("wrl//m"+str::ToString(i)+".wrl",	d_col	,3);
@@ -211,6 +217,14 @@ void LoadNeuron()
 
 //tp
 	for(int i=20;i<=36;i++)		AddGeom("wrl//t"+str::ToString(i)+"p.wrl",	psd_col	,1);
+
+//Ca
+	for(int i=1;i<=17;i++)		AddGeom("wrl//new//as1er"+str::ToString(i)+".wrl",	ca_col	,4);
+	for(int i=1;i<=7;i++)		AddGeom("wrl//new//as2er"+str::ToString(i)+".wrl",	ca_col	,4);
+	for(int i=1;i<=1;i++)		AddGeom("wrl//new//as5er"+str::ToString(i)+".wrl",	ca_col	,4);
+//Mi
+	for(int i=1;i<=4;i++)		AddGeom("wrl//new//as1mt"+str::ToString(i)+".wrl",	mit_col	,5);
+	for(int i=1;i<=7;i++)		AddGeom("wrl//new//as2mt"+str::ToString(i)+".wrl",	mit_col	,5);
 
 
 	neuron[2].push_back(Geometry(vec4(1,1,1,1)));
