@@ -45,6 +45,8 @@ void ConvertLines(Lines& src_lines, v3vec& dst_vert, iv2vec& dst_lines);
 
 void GetInSphere(Geometry*target,vec3 c,float rad,Geometry*res);
 
+void GetInSphere0(Geometry*target,vec3 c,float rad,Geometry*res);
+
 inline bool vecs_near(vec2& a, vec2& b);
 inline bool vecs_near(vec3& a, vec3& b);
 int find_vec2(vec2& el,std::vector<vec2>& arr);

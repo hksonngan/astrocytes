@@ -101,20 +101,56 @@ void DrawScene()
 	SetAnag(&sp,anag,anag_left);
 	sp.SetVar("LightDir",vec3(light));
 	sp.SetVar("pos",cam.GetPosition());
+	sp.SetVar("params",vec4(0));
 
 	//glEnable(GL_DEPTH_TEST);
 
-	for(int i=0;i<neuron.size();i++)
+	for(int i=1;i<neuron.size();i++)
+//	for(int i=neuron.size()-1;i>=0;i--)
 	for(int j=0;j<neuron[i].size();j++)
 		if(neuron[i][j].color.w)
 	//		if(i!=1 || j==cur_psd)
 	{
+		if(!i)
+		{
+			sp.SetVar("params",vec4(0,1,0,0));
+			glCullFace(GL_BACK);	
+		}
 		glColor4fv(&neuron[i][j].color.x);
 		if(smoothing)
 			neuron[i][j].Draw2();
 		else
 			neuron[i][j].Draw();
 
+		if(!i)
+		{
+			sp.SetVar("params",vec4(0,0,0,0));
+			glCullFace(GL_FRONT);	
+		}
+		
+		if(draw_boxes)
+		{
+			if(shaders_is) sp.UnUse();
+			neuron[i][j].DrawBoxes();
+			if(shaders_is) sp.Use();
+		}
+
+	}
+	
+	int i=0;
+	for(int j=0;j<neuron[i].size();j++)
+	{
+	
+		sp.SetVar("params",vec4(1,1,0,0));
+		glCullFace(GL_BACK);	
+		
+		glColor4fv(&neuron[i][j].color.x);
+		if(smoothing)			neuron[i][j].Draw2();		else			neuron[i][j].Draw();
+		sp.SetVar("params",vec4(1,0,0,0));
+		glCullFace(GL_FRONT);	
+		if(smoothing)			neuron[i][j].Draw2();		else			neuron[i][j].Draw();
+		
+		
 		if(draw_boxes)
 		{
 			if(shaders_is) sp.UnUse();

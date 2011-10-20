@@ -15,6 +15,7 @@ void VboMesh::Build(v3vec& vert, v3vec& norm, v4vec& col, iv3vec& id)
 {
 	Clear();
 	iNum = id.size()*3;
+	if(!iNum)return;
 
 	glGenBuffersARB (1, &vertexID );
 	glGenBuffersARB (1, &colorID );

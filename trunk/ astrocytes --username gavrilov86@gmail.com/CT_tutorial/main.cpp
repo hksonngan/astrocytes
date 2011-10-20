@@ -19,6 +19,7 @@
 #include "table.h"
 #include "painting.h"
 #include "PN_Triangle.h"
+#include "CaDepo.h"
 
 Mouse mouse;
 Camera cam;
@@ -37,11 +38,7 @@ void view_sect2(flat sc_f,vec3 fd,bool fill);
 void FullDraw();
 
 
-//0-astr,1-psd,2-for testing, 3-dendrits
-//4-CaDepo 5-mitohondria
-std::vector<std::vector<Geometry>> neuron;
-
-
+std::vector<std::vector<Geometry>> neuron;//0-astr,1-psd,2-for testing, 3-dendrits
 //std::vector<Edist> edist;
 std::vector<PSD> psd;
 std::vector<Line> section;
@@ -140,6 +137,7 @@ void Calc3();
 void CalcAreas(vec3 d,vec3 x,vec3 y,float rad,float*res,ivec2 res_size);
 
 void CalcHist1();
+void CalcSVRHist();
 void CalcHist2(int psd_id);
 void CalcHist3();
 
@@ -147,7 +145,7 @@ void CalcHist3();
 void KeyButton ( int key, int state )
 {
 	keyboard[key]=state;
-
+srand(glfwGetTime ( ));
 	
 	if(state)
 	{
@@ -175,25 +173,28 @@ void KeyButton ( int key, int state )
 		if(key=='T')
 		{
 			for(int i=0;i<neuron.size();i++)
-				//if(i!=2)
+				if(i!=1 && i!=2)
 				for(int j=0;j<neuron[i].size();j++)
 					if(neuron[i][j].vert.size())
 				{
+					printf("%d %d, ",i,j);
 					Geometry g1;
-					MakeSmoothed(&neuron[i][j],&g1,5);
+					MakeSmoothed(&neuron[i][j],&g1,8);
 					neuron[i][j].vbo_mesh.Build(g1.vert,g1.norm,g1.vert_col,g1.face);
-				printf("|");
 				}
 		}
 		if(key=='Q')PaintTrue(sect_radius);
-		if(key=='H')
+		if(key=='H') 
 		{
+			/*
 			for(int r=3;r<=7;r++)
 			{
 				SetPaintingRadius(r*100);
-				CalcHist1();
+				CalcSVRHist();
 			}
-			//CalcHist3();
+		*/
+			CalcERtoSVR(0,0.6);
+			CalcERtoSVR(1,0.6);
 			
 		}
 		if(key=='Z')PaintAs(cam.GetPosition(),0.6);
@@ -362,8 +363,7 @@ void KeyButton ( int key, int state )
 	{
 		
 		double start = glfwGetTime ( );
-		//for(int r=3;r<=7;r++)
-		for(int r=7;r>=3;r--)
+		for(int r=3;r<=7;r++)
 		{
 				SetPaintingRadius(r*100);
 			//for(int rd=5;rd<25;rd++)
@@ -389,6 +389,8 @@ void KeyButton ( int key, int state )
 			{
 				for(int i=0;i<neuron[id].size();i++)
 					neuron[id][i].visible=!neuron[id][i].visible;
+				
+				
 			}
 		}
 	}
