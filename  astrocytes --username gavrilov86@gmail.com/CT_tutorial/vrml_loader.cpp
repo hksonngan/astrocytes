@@ -2,8 +2,11 @@
 #include "vec.h"
 #include "str.h"
 #include "globals.h"
+#include "CaDepo.h"
 
 int total_tr=0,total_v=0;
+
+int curr_astr=0;
 
 bool TryLoadBin(Geometry& g, std::string fn)
 {
@@ -153,15 +156,22 @@ void AddGeom(std::string fn,vec4 cl,int id)
 	int g_id = neuron[id].size()-1;
 	Geometry*g = &neuron[id][g_id];
 	vrml_LoadMesh(*g,fn);
-	if(id==0)
+	if(id==0 || id==4)
 	{
 		g->RebuildTrBB();
 		g->RebuildTrBB2();
+		CD_depo.push_back(ivec());
+		
 	}
 	//if(id==1)edist.push_back(Edist(g));
 	//if(id==3)
 	g->UpdateBox();
 	if(id==3)g->visible=0;
+	if(id==4)
+	{
+		CD_astr.push_back(curr_astr);
+		CD_depo[curr_astr].push_back(neuron[id].size()-1);
+	}
 	if(id==1)
 	{
 		psd.push_back(PSD(g));
@@ -197,7 +207,7 @@ void LoadNeuron()
 	vec4 d_col(0.7,0.7,0.7,1);
 	vec4 psd_col(1.0,1.0,0.4,1);
 	vec4 ca_col(0.7,0.9,0.3,1);
-	vec4 mit_col(0.5,0.0,0.4,1);
+	vec4 mit_col(0.5,0.6,0.1,1);
 	
 //m
 	for(int i=1;i<=16;i++)		AddGeom("wrl//m"+str::ToString(i)+".wrl",	d_col	,3);
@@ -219,12 +229,17 @@ void LoadNeuron()
 	for(int i=20;i<=36;i++)		AddGeom("wrl//t"+str::ToString(i)+"p.wrl",	psd_col	,1);
 
 //Ca
+	curr_astr=0;
 	for(int i=1;i<=17;i++)		AddGeom("wrl//new//as1er"+str::ToString(i)+".wrl",	ca_col	,4);
+	curr_astr=1;
 	for(int i=1;i<=7;i++)		AddGeom("wrl//new//as2er"+str::ToString(i)+".wrl",	ca_col	,4);
+	curr_astr=4;
 	for(int i=1;i<=1;i++)		AddGeom("wrl//new//as5er"+str::ToString(i)+".wrl",	ca_col	,4);
 //Mi
-	for(int i=1;i<=4;i++)		AddGeom("wrl//new//as1mt"+str::ToString(i)+".wrl",	mit_col	,5);
-	for(int i=1;i<=7;i++)		AddGeom("wrl//new//as2mt"+str::ToString(i)+".wrl",	mit_col	,5);
+	curr_astr=0;
+	for(int i=1;i<=4;i++)		AddGeom("wrl//new//as1mt"+str::ToString(i)+".wrl",	mit_col	,4);
+	curr_astr=1;
+	for(int i=1;i<=7;i++)		AddGeom("wrl//new//as2mt"+str::ToString(i)+".wrl",	mit_col	,4);
 
 
 	neuron[2].push_back(Geometry(vec4(1,1,1,1)));

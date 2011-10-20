@@ -6,6 +6,7 @@ uniform vec3 RFrom;
 uniform vec3 GFrom;
 uniform vec3 BFrom;
 
+uniform vec4 params;
 uniform vec3 pos;
 uniform vec3 LightDir;
 
@@ -37,6 +38,11 @@ void main()
 	}
 	}
 	*/
+	
+	if(params.x>=0.5)
+		color.w *= 1.0 - abs(dot ( normalize(pos-vertex), normal ))*0.8;
+	if(params.y>=0.5)normal=-normal;
+		
 	gl_FragColor = vec4(Phong(vertex,normal,color.xyz)*m_anag,color.w);
 	
 }

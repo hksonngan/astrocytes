@@ -7,9 +7,9 @@
 #include "tbb/blocked_range2d.h"
 #include "tbb/tick_count.h"
 
-float painting_rad=0.7;
-int painting_rad_nm=700;
-std::string painting_svr_fn = "painting_svr_700";
+int painting_rad_nm=300;
+float painting_rad=painting_rad_nm*0.001;
+std::string painting_svr_fn = "painting_svr_"+str::ToString(painting_rad_nm);
 
 void LoadPainting(std::string fn);
 void SetPaintingRadius(int rad_nm)

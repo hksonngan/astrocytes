@@ -1,8 +1,8 @@
 #include "globals.h"
 #include "table.h"
 
-#define RAD_NUM 60
-#define SVR_NUM 360
+#define RAD_NUM 40
+#define SVR_NUM 40
 
 extern int painting_rad_nm;
 
@@ -27,6 +27,77 @@ float NearestPSD_sp(vec3 pt,int psd_id)
 		if(ll<minl || !j){minl=ll;}
 	}
 	return minl;
+}
+void CalcSVRHist()
+{
+	int svr_num=40,psd_id;
+	float max_svr=40,max_rad=120.5;
+	float *all_vl2=new float[svr_num];
+	memset(all_vl2,0,svr_num*sizeof(float));
+
+	for(int as=0;as<neuron[0].size();as++)
+	{printf("+");
+		Geometry*g = &neuron[0][as];
+		for(int i=0;i<g->face.size();i++)
+		{
+			ivec3 ff=g->face[i];
+			if((g->vert_val[ff.x]>0)&&(g->vert_val[ff.y]>0)&&(g->vert_val[ff.z]>0))
+			if(NearestPSD(g->vert[ff.x],psd_id)<=max_rad || NearestPSD(g->vert[ff.y],psd_id)<=max_rad || NearestPSD(g->vert[ff.z],psd_id)<=max_rad)
+			{
+				vec3 v[3];
+				float svrs[3];
+				for(int ii=0;ii<3;ii++)
+				{
+					v[ii]=g->vert[ff.GetByID(ii)];
+					svrs[ii] = g->vert_val[ff.GetByID(ii)];
+				}
+				svrs[1]-=svrs[0];
+				svrs[2]-=svrs[0];
+				v[1] -=v[0];
+				v[2] -=v[0];
+				float s = vec3::vect_mult(v[2],v[1]).length();
+
+				for(int jj=0;jj<60;jj++)
+				{
+					
+					float t1=RND01,t2=RND01;
+					while(t1+t2>1){t2=RND01;t1=RND01;}
+					vec3 pt1 = v[0] + v[1]*t1 + v[2]*t2;
+					float ss = svrs[0] + svrs[1]*t1 + svrs[2]*t2;
+					float rr = sqrt(NearestPSD(pt1,psd_id));					
+					int hj = svr_num*(ss/max_svr);
+					if(rr<max_rad)
+					if(hj>=0 && hj<svr_num)
+					{
+						all_vl2[hj]+=s;
+					}
+					
+
+				}
+			}
+		}
+		
+	}
+	
+	
+	Table tbl(2,svr_num+2);
+	
+	tbl.SetValue("SVR",1,0);
+	tbl.SetValue("R="+str::ToString(painting_rad_nm),0,0);
+	for(int i=0;i<svr_num;i++)	
+		tbl.SetValue((i+1)*max_svr/svr_num,1,i+1);
+
+	float svr_summ=0;
+	for(int j=0;j<svr_num;j++)
+		svr_summ+=all_vl2[j];
+
+	for(int j=0;j<svr_num;j++)
+	{
+		tbl.SetValue((float)(all_vl2[j]/svr_summ),0,j+1);
+	}
+	tbl.StoreToFile("results\\hist_svr_"+str::ToString(painting_rad_nm)+".txt");
+
+	delete[]all_vl2;
 }
 void CalcHist1()
 {
