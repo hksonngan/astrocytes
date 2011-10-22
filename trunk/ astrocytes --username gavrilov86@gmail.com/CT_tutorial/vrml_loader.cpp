@@ -206,8 +206,8 @@ void LoadNeuron()
 
 	vec4 d_col(0.7,0.7,0.7,1);
 	vec4 psd_col(1.0,1.0,0.4,1);
-	vec4 ca_col(0.7,0.9,0.3,1);
-	vec4 mit_col(0.5,0.6,0.1,1);
+	vec4 ca_col(0.7,1,0.3,1);
+	vec4 mit_col(0.5,0.4678,0.1,1);
 	
 //m
 	for(int i=1;i<=16;i++)		AddGeom("wrl//m"+str::ToString(i)+".wrl",	d_col	,3);

@@ -71,7 +71,7 @@ void CalcERtoSVR(int as_id,float rad)
 			//printf("(%d)",g0->tr.size());
 			
 			bool ins_er = g_er->Inside(pt);
-			V_er += mc_CalcVolume(g0,pt,rad,pt,ins_er);
+			V_er += g_er->color.y*mc_CalcVolume(g0,pt,rad,pt,ins_er);
 			
 		}
 
@@ -120,4 +120,159 @@ void CalcERtoSVR(int as_id,float rad)
 	delete[]all_vl2_num;
 	delete[]hist;
 	
+}
+
+
+
+void CalcER()
+{
+float d0 = 0.01f;
+float d1 = 0.8f;
+float d_step = 0.01f;
+int it_num = int((d1-d0)/d_step);
+int opers_left,opers_total;
+double start = glfwGetTime ( );
+
+	int psd_num = psd.size();
+	opers_left =opers_total= it_num*psd_num;
+	float *Vas=new float[it_num];
+	float *Ver=new float[it_num];
+	
+	memset(Vas,0,it_num*sizeof(float));
+	memset(Ver,0,it_num*sizeof(float));
+	float *Vas1=new float[it_num];
+	float *Ver1=new float[it_num];
+	
+	memset(Vas1,0,it_num*sizeof(float));
+	memset(Ver1,0,it_num*sizeof(float));
+	
+	float cur_d;
+	Geometry *gg0 = new Geometry(),*gg = new Geometry();
+	Geometry*gs = new Geometry();
+
+	for(int psd_id=0;psd_id<psd_num;psd_id++)
+	{
+
+		cur_d=d0;
+
+		gs->renull();
+		AddSphere(gs,d1+d_step,20,20);
+		gs->Move(psd[psd_id].fl.d);
+		gs->RebuildTrBB();
+		gs->RebuildTrBB2();
+		gg0->renull();
+		for(int as=0;as<2;as++)
+		{
+			GetSection(gs,&neuron[0][as],gg0,1,0);
+			GetSection(&neuron[0][as],gs,gg0,1,0);
+		}
+		gg0->RebuildTrBB();
+		gg0->RebuildTrBB2();
+			
+		for(int i=0;i<it_num;i++)
+		{
+			
+			gg->renull();
+			gs->renull();
+			AddSphere(gs,cur_d,20,20);
+			gs->Move(psd[psd_id].fl.d);
+			gs->RebuildTrBB();
+			gs->RebuildTrBB2();
+
+			GetSection(gs,gg0,gg,1,0,0);
+			float ss = gg->CalcArea();
+
+			float ss1=0;
+			for(int as_id=0;as_id<2;as_id++)
+			for(int ii=0;ii<CD_depo[as_id].size();ii++)
+			{
+				Geometry* g_er = &neuron[4][CD_depo[as_id][ii]];
+				if(!g_er->tr.size())continue;
+				gg->renull();
+				GetSection(gs,g_er,gg,1,0,0);
+				ss1 += gg->CalcArea()*g_er->color.y;
+				
+			}
+					
+			opers_left--;
+		
+
+			Vas1[i] = ss/(4*PI*cur_d*cur_d);
+			Ver1[i] = ss1/(4*PI*cur_d*cur_d);
+			Vas[i] += Vas1[i];
+			Ver[i] += Ver1[i];
+
+			cur_d += d_step;
+			int sc=((opers_left)*(glfwGetTime ( )-start)/(opers_total-opers_left))/60;
+						
+			printf("%dpsd	%dit	%d%	%d:%d\n",psd_id,opers_left,(opers_left*100)/opers_total,sc/60,sc%60);
+				
+			
+		}
+////
+		Table tbl1(it_num+1,4);
+		tbl1.SetValue("Distance",0,0);
+		tbl1.SetValue("%Vas",0,1);
+		tbl1.SetValue("%Ver",0,2);
+		tbl1.SetValue("Ver/Vas",0,3);
+		
+		{
+			float cur_d = d0;
+			for(int i=0;i<it_num;i++)
+			{
+				tbl1.SetValue(str::ToString(int(cur_d*1000))+"nm",i+1,0);
+				cur_d += d_step;		
+			}
+		}
+		for(int i=0;i<it_num;i++)
+		{
+			tbl1.SetValue(Vas1[i],i+1,1);
+			tbl1.SetValue(Ver1[i],i+1,2);
+			if(Vas1[i])tbl1.SetValue(Ver1[i]/Vas1[i],i+1,3);
+			
+		}
+		
+		tbl1.StoreToFile("results\\ER_central_"+str::ToString(psd_id)+".txt");
+		
+	}
+
+				
+	//}
+//
+	Table tbl1(it_num+1,4);
+	tbl1.SetValue("Distance",0,0);
+	tbl1.SetValue("%Vas",0,1);
+	tbl1.SetValue("%Ver",0,2);
+	tbl1.SetValue("Ver/Vas",0,3);
+	
+	{
+		float cur_d = d0;
+		for(int i=0;i<it_num;i++)
+		{
+			tbl1.SetValue(str::ToString(int((cur_d+0.0001f)*1000))+"nm",i+1,0);
+			cur_d += d_step;		
+		}
+	}
+	for(int i=0;i<it_num;i++)
+	{
+		tbl1.SetValue(Vas[i]/psd_num,i+1,1);
+		tbl1.SetValue(Ver[i]/psd_num,i+1,2);
+		if(Vas[i])tbl1.SetValue(Ver[i]/Vas[i],i+1,3);
+		
+	}
+	
+	tbl1.StoreToFile("results\\ER_central.txt");
+	
+	
+//
+			
+		
+	delete gg;
+	delete gg0;
+	delete gs;
+	delete[]Vas;
+	delete[]Ver;
+	delete[]Vas1;
+	delete[]Ver1;
+
 }
