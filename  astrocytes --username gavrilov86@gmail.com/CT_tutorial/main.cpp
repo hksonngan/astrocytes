@@ -186,15 +186,15 @@ srand(glfwGetTime ( ));
 		if(key=='Q')PaintTrue(sect_radius);
 		if(key=='H') 
 		{
-			/*
+			
 			for(int r=3;r<=7;r++)
 			{
 				SetPaintingRadius(r*100);
 				CalcSVRHist();
 			}
-		*/
-			CalcERtoSVR(0,0.6);
-			CalcERtoSVR(1,0.6);
+		
+//			CalcERtoSVR(0,0.6);
+//			CalcERtoSVR(1,0.6);
 			
 		}
 		if(key=='Z')PaintAs(cam.GetPosition(),0.6);
@@ -356,9 +356,11 @@ srand(glfwGetTime ( ));
 			delete[]dt;
 			printf("\n%g sec ",glfwGetTime ( )-start);
 			*/
-			Calc(cur_psd);
+			//Calc(cur_psd);
+			CalcER();
+
 		}
-		if(key=='J')
+		if(key=='J') 
 			//if(0)
 	{
 		

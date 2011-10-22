@@ -24,63 +24,6 @@ int it_num = int((d1-d0)/d_step);
 int opers_left,opers_total;
 double start;
 mutex* progress_mutex;
-/*
-void InitProc()
-{
-	static tbb::task_scheduler_init init;
-	progress_mutex = new mutex();
-}
-
-void UnInitProc()
-{
-	delete progress_mutex;
-}
-void Calc(int psd_id);
-void StoreResultsToFile();
-
-class tbb_Calc
-{
-
-public:
-	tbb_Calc(){ };
-
-public:
-    void operator()(const blocked_range <size_t>& r) const
-    {        
-        for (size_t i=r.begin(); i!=r.end(); i++) 
-        {
-			Calc(i);
-        }
-    }
-};
-
-
-void Calc()
-{
-	start = glfwGetTime ( );
-	opers_left =opers_total= it_num*psd.size();
-	squares=new float[opers_left];
-	perimeters=new float[opers_left];
-	memset(squares,0,opers_left*sizeof(float));
-	memset(perimeters,0,opers_left*sizeof(float));
-	
-
-
-	InitProc();
-	parallel_for(blocked_range<size_t>(0,psd.size(),1),	tbb_Calc() );
-	UnInitProc();
-
-	start = glfwGetTime ( )-start;
-	printf("\n---\n%gmin\n",start/60);
-	
-	
-	str::StringPairs str_pr;
-	str::AddPair(str_pr,".",",");
-	str::ReplaceInFile("output2.txt","_output2.txt",str_pr);
-
-	delete[]squares;
-	delete[]perimeters;
-}*/
 void Calc(int psd_id1)
 {
 	opers_left =opers_total= it_num*psd.size();
