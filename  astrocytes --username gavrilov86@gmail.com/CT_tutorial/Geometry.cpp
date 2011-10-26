@@ -177,6 +177,7 @@ bool Geometry::Inside(vec3 pt)
 	int sm=0;
 	vec3 pt2 = pt+vec3(0,0,100),cr;
 //	vec2 v1,v2;
+	//if(pt.x>=box1.x && pt.x<=box2.x && pt.y>=box1.y && pt.y<=box2.y && pt.z>=box1.z && pt.z<=box2.z)
 	for(int i=0;i<tr.size();i++)
 	{
 		/*
