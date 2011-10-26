@@ -30,7 +30,7 @@ float NearestPSD_sp(vec3 pt,int psd_id)
 }
 void CalcSVRHist()
 {
-	int svr_num=40,psd_id;
+	int svr_num=400,psd_id;
 	float max_svr=40,max_rad=120.5;
 	float *all_vl2=new float[svr_num];
 	memset(all_vl2,0,svr_num*sizeof(float));
@@ -57,7 +57,7 @@ void CalcSVRHist()
 				v[2] -=v[0];
 				float s = vec3::vect_mult(v[2],v[1]).length();
 
-				for(int jj=0;jj<60;jj++)
+				for(int jj=0;jj<500;jj++)
 				{
 					
 					float t1=RND01,t2=RND01;

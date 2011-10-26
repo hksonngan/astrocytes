@@ -51,6 +51,6 @@ inline bool vecs_near(vec2& a, vec2& b);
 inline bool vecs_near(vec3& a, vec3& b);
 int find_vec2(vec2& el,std::vector<vec2>& arr);
 int find_vec3(vec3& el,std::vector<vec3>& arr);
-
+int GetNearest(v3vec& vert,vec3 pt);
 
 #endif

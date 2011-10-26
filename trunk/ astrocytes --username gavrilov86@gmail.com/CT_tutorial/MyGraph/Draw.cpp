@@ -156,8 +156,8 @@ void DrawSphere()
 	static GLuint list_id=0;
 	if(!list_id) 
 	{
-		int sides_a = 21;
-		int sides_b = 21;
+		int sides_a = 40;
+		int sides_b = 40;
 
 		list_id = glGenLists(1);
 		glNewList(list_id, GL_COMPILE);

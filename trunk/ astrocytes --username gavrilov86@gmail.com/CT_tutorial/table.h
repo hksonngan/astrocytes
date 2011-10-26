@@ -15,10 +15,13 @@ public:
 	void Clear();
 	~Table();
 	void StoreToFile(std::string fn);
+	void OpenFromFile(std::string fn);
 	void SetValue(std::string val,int i,int j);
 	void SetValue(float val,int i,int j,bool undot=1);
 	void SetValue(int val,int i,int j);
 	void SetValueB(bool val,int i,int j);
+	float GetFloatValue(int i,int j);
+
 private:
 	std::string **data;
 	int width,height;

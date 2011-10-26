@@ -21,6 +21,8 @@
 #include "PN_Triangle.h"
 #include "CaDepo.h"
 
+vec Approx(vec& x_vals,vec& y_vals,v2vec& p_b);
+
 Mouse mouse;
 Camera cam;
 
@@ -187,19 +189,21 @@ srand(glfwGetTime ( ));
 		if(key=='H') 
 		{
 			
-			for(int r=3;r<=7;r++)
+			//for(int r=3;r<=7;r++)
 			{
-				SetPaintingRadius(r*100);
+				//SetPaintingRadius(r*100);
+				SetPaintingRadius(600);
 				CalcSVRHist();
 			}
-		
-//			CalcERtoSVR(0,0.6);
-//			CalcERtoSVR(1,0.6);
+			if(0)
+			for(int as=0;as<5;as++)
+				CalcERtoSVR(as,0.6);
 			
 		}
 		if(key=='Z')PaintAs(cam.GetPosition(),0.6);
 		if(key=='Y')
 		{
+			/*
 			Geometry*g0=&neuron[2][0];
 			g0->renull();
 			g0->color.set(1,1,1,1);
@@ -209,6 +213,9 @@ srand(glfwGetTime ( ));
 				GetInSphere(&neuron[0][as],cam.GetCenter(),sect_radius,g0);
 				
 			}
+			*/
+			float a,b;
+			CalcMonteEPR_as(cam.GetCenter(),sect_radius,a,b);
 			
 		}
 		if(key=='X')
@@ -461,6 +468,42 @@ void initIVP()
 */	
 	
 	PaintTrue(1.0f/30);
+	//printf("\n");
+if(0)
+	for(int i=0;i<5;i++)
+	{
+		float v = neuron[0][i].CalcVolume();
+		printf("%g\n",v);
+	}
+
+	/*
+	Table tbl(4,410);
+	tbl.OpenFromFile("results\\hist_svr_600.txt");
+	vec x_vals,y_vals;
+	v2vec p_b;
+	for(int i=0;i<400;i++)
+	{
+		printf(" %g\n",tbl.GetFloatValue(0,i+1));
+		x_vals.push_back(tbl.GetFloatValue(1,i+1));
+		y_vals.push_back(tbl.GetFloatValue(0,i+1));
+	}
+	p_b.resize(5);
+	for(int i=0;i<2;i++)
+	{
+		p_b[0+i*2].set(3,30);
+		p_b[1+i*2].set(0,10);
+	}
+		p_b[4].set(0,1);
+		
+	vec prm = Approx(x_vals,y_vals,p_b);
+	Table tbl1(1,6);
+	for(int i=0;i<prm.size();i++)
+	{
+
+		tbl1.SetValue(prm[i],0,i);
+	}
+	tbl1.StoreToFile("results\\_gauss2.txt");
+	*/
 	
 }
 
