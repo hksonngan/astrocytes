@@ -68,7 +68,21 @@ void Table::OpenFromFile(std::string fn)
 		memset(buf,0,10000);
 		fs12.getline(buf,10000);
 		std::string ss(buf);
-		svec vls = str::split(ss,"	"+std::string(ENTER));
+		svec vls;// = str::split(ss,"	"+std::string(ENTER));
+		int beg=0,sl=strlen(buf);
+
+		for(int i=0;i<sl;i++)
+		{
+			if(buf[i]=='	')
+			{
+				buf[i]=0;
+				std::string ss(buf+beg);
+				//printf("{%s}",ss.c_str());
+				vls.push_back(ss);
+				beg=i+1;
+			}
+			if(buf[i]==13)break;
+		}
 
 		for(int i=0;i<vls.size();i++)
 		if(i<width)
@@ -102,7 +116,14 @@ float Table::GetFloatValue(int i,int j)
 		//data[i][j] = val;
 	else {printf("\nTable::SetValue error\n");return 0;}
 }
-
+std::string Table::GetStringValue(int i,int j)
+{
+	if(i>=0 && j>=0 && i<width && j<height && data)
+	{
+		return *(*(data+i)+j);
+	}
+	else {printf("\nTable::SetValue error\n");return "";}
+}
 void Table::SetValue(std::string val,int i,int j)
 {
 	if(i>=0 && j>=0 && i<width && j<height && data)

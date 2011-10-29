@@ -12,6 +12,8 @@ public:
 	Table();
 	Table(int w,int h);
 	void SetSize(int w,int h);
+	int GetWidth(){return width;}
+	int GetHeight(){return height;}
 	void Clear();
 	~Table();
 	void StoreToFile(std::string fn);
@@ -21,6 +23,7 @@ public:
 	void SetValue(int val,int i,int j);
 	void SetValueB(bool val,int i,int j);
 	float GetFloatValue(int i,int j);
+	std::string GetStringValue(int i,int j);
 
 private:
 	std::string **data;
