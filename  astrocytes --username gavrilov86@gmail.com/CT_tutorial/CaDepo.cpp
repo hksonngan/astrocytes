@@ -125,12 +125,12 @@ void CalcERtoSVR(int as_id,float rad)
 	
 }
 
-float nearest_epr(vec3 pt)
+float nearest_geoms(int g_ig,vec3 pt)
 {
 	float res=1000;
-	for(int i=0;i<neuron[4].size();i++)
+	for(int i=0;i<neuron[g_ig].size();i++)
 	{
-		Geometry* g_er = &neuron[4][i];
+		Geometry* g_er = &neuron[g_ig][i];
 		if(!g_er->tr.size())continue;
 		float ll = pt.lengthSQR(g_er->vert[GetNearest(g_er->vert,pt)]);
 		if(res>ll)res=ll;
@@ -140,13 +140,19 @@ float nearest_epr(vec3 pt)
 
 void CalcER()
 {
-		//*'
-printf("\n");
+//*'
+Table tbl0(2,54);
+tbl0.SetValue("nearest_astr",0,0);
+tbl0.SetValue("nearest_epr",1,0);
 for(int i=0;i<psd.size();i++)
-		printf("\n%g ",nearest_epr(psd[i].fl.d));
+{
+	tbl0.SetValue(nearest_geoms(0,psd[i].fl.d),0,1+i);
+	tbl0.SetValue(nearest_geoms(4,psd[i].fl.d),1,1+i);
+}
+tbl0.StoreToFile("distances.txt");
 	return;// */
 float d0 = 0.01f;
-float d1 = 0.6f;
+float d1 = 2.5f;
 float d_step = 0.01f;
 int it_num = int((d1-d0)/d_step);
 int opers_left,opers_total;
@@ -171,7 +177,7 @@ double start = glfwGetTime ( );
 
 	for(int psd_id=0;psd_id<psd_num;psd_id++)
 	{
-		float offset=nearest_epr(psd[psd_id].fl.d);
+		float offset=0;//nearest_epr(psd[psd_id].fl.d);
 
 		cur_d=d0+offset;
 
@@ -349,7 +355,7 @@ double start = glfwGetTime ( );
 
 	for(int psd_id=0;psd_id<psd_num;psd_id++)
 	{
-		float offset=nearest_epr(psd[psd_id].fl.d);
+		float offset=nearest_geoms(4,psd[psd_id].fl.d);
 		cur_d=d0;
 
 		for(int i=0;i<it_num;i++)

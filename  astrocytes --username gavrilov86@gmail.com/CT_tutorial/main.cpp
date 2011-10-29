@@ -476,7 +476,7 @@ if(0)
 		printf("%g\n",v);
 	}
 
-	/*
+	/* //approximation with 2 gausses
 	Table tbl(4,410);
 	tbl.OpenFromFile("results\\hist_svr_600.txt");
 	vec x_vals,y_vals;
@@ -504,6 +504,52 @@ if(0)
 	}
 	tbl1.StoreToFile("results\\_gauss2.txt");
 	*/
+	
+	Table tbl(249,160);
+	tbl.OpenFromFile("results\\ER_central.txt");
+	
+	int offset[53],max_offset=0;
+	int med_max=0;
+	
+
+	for(int i=0;i<53;i++)
+	{
+		float vl0=0;
+		for(int j=1;j<tbl.GetWidth();j++)
+		{
+			float vl = tbl.GetFloatValue(j,1+53*2+i);
+			if(vl<vl0)
+			{
+				offset[i] = j-2;
+				if(vl0>0.02)
+				{
+					if(max_offset<j-2)max_offset=j-2;
+					//printf("\n%d) %d, %dnm",i,j-2,(j-2)*10);
+					printf("\n%g",(j-1)*0.01f);
+					med_max+=(j-2);
+					break;
+				}
+			}
+			vl0=vl;
+		}
+		
+	}
+	printf("\n________\n max=%d mid=%g",max_offset,med_max/53.0f);
+	Table tbl1(tbl.GetWidth()+max_offset,tbl.GetHeight());
+	for(int i=0;i<53;i++)
+	{
+		for(int j=1;j<tbl.GetWidth();j++)
+		{
+			
+			for(int p=0;p<3;p++)
+			{
+				std::string vl = tbl.GetStringValue(j,1+53*p+i);
+				tbl1.SetValue(vl,j+max_offset-offset[i],1+53*p+i);
+			}
+		}
+	}
+	tbl1.StoreToFile("results\\_ER_central.txt");
+	
 	
 }
 
