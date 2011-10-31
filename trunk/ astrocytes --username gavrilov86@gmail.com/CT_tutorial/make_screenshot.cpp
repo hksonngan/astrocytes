@@ -3,8 +3,6 @@
 
 void MakeScreenShot(std::string screenshot_dst)
 {
-	
-	
 	glReadBuffer(GL_BACK);
 	unsigned char *dt0 = new unsigned char [width*height*3];
 	unsigned char *dt = new unsigned char [width*height*3];

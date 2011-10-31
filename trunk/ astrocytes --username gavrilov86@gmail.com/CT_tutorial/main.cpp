@@ -442,6 +442,7 @@ void SetupGL()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
+
 void initIVP()
 {
 	
@@ -505,6 +506,7 @@ if(0)
 	tbl1.StoreToFile("results\\_gauss2.txt");
 	*/
 	
+	/*
 	Table tbl(249,160);
 	tbl.OpenFromFile("results\\ER_central.txt");
 	
@@ -550,7 +552,25 @@ if(0)
 	}
 	tbl1.StoreToFile("results\\_ER_central.txt");
 	
-	
+	*/
+	/*
+	int ii;
+	float l1=0;
+	for(int i=0;i<psd.size();i++)
+	{
+		float minl;
+		for(int j=0;j<psd.size();j++)
+		if(i!=j)
+		{
+			float ll = psd[j].fl.d.lengthSQR(psd[i].fl.d);
+			if(ll<minl || !j){minl=ll;}
+		}
+		minl=sqrt(minl);
+		printf("\n< %g",minl);
+		l1 += minl/53.0f;
+	}
+	printf("< %g >",l1);
+	*/
 }
 
 int main ( void )
