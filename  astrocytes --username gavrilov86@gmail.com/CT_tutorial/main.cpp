@@ -194,7 +194,8 @@ srand(glfwGetTime ( ));
 			{
 				//SetPaintingRadius(r*100);
 				SetPaintingRadius(600);
-				CalcSVRHist();
+				//CalcSVRHist();
+				CalcHist1();
 			}
 			if(0)
 			for(int as=0;as<5;as++)
@@ -508,7 +509,7 @@ if(0)
 	tbl1.StoreToFile("results\\_gauss2.txt");
 	*/
 	
-	/*
+//	shift
 	Table tbl(249,160);
 	tbl.OpenFromFile("results\\ER_central.txt");
 	
@@ -554,7 +555,24 @@ if(0)
 	}
 	tbl1.StoreToFile("results\\_ER_central.txt");
 	
-	*/
+	int dv=4;
+	Table tbl2(tbl1.GetWidth()/dv+1,tbl1.GetHeight());
+	for(int i=0;i<53;i++)
+	{
+		for(int j=0;j<tbl2.GetWidth();j++)
+		{
+			for(int p=0;p<3;p++)
+			{
+				float vl = 0;
+				for(int k=0;k<dv;k++)
+					vl+=tbl1.GetFloatValue(j*dv+k+1,1+53*p+i);
+				vl/=dv;
+				tbl2.SetValue(vl,j+1,1+53*p+i);
+			}
+		}
+	}
+	tbl2.StoreToFile("results\\smaller_ER_central.txt");
+	
 	/*
 	int ii;
 	float l1=0;
