@@ -1,8 +1,8 @@
 #include "globals.h"
 #include "table.h"
 
-#define RAD_NUM 40
-#define SVR_NUM 40
+#define RAD_NUM 60
+#define SVR_NUM 60
 
 extern int painting_rad_nm;
 
@@ -145,7 +145,7 @@ void CalcHist1()
 		}
 	}
 	*/
-	max_rad = 0.5;//sqrt(max_rad);
+	max_rad = 0.6;//sqrt(max_rad);
 	printf("\n\n%g %g |",max_rad,max_svr);
 	
 
@@ -189,16 +189,23 @@ void CalcHist1()
 					float rr = sqrt(NearestPSD_sp(pt1,pID));
 					
 					int hi = rad_num*(rr/max_rad);
-					int hj = svr_num*(ss/max_svr);
+					int hj = 0;//svr_num*(ss/max_svr);
 
 					//printf("%d %d =",hi,hj);
 					if(hi>=0 && hi<rad_num && hj>=0 && hj<svr_num)
 					{
-						hist[hi+hj*rad_num]+=s;
-						all_vl[hi]+=s;
+						//hist[hi+hj*rad_num]+=s;
+						for(int k=0;k<svr_num;k++)
+						{
+							hist[hi] = ((ss>k+1)*100.0f + all_vl[hi]*hist[hi])/(all_vl[hi]+1);
+							all_vl[hi]++;
+							
+						}
+						//all_vl[hi]+=s;
 						all_vl2[hj]+=s;
 
-						svr_mid[hi] = (ss + svr_n[hi]*svr_mid[hi])/(svr_n[hi]+1);
+						//svr_mid[hi] = (ss + svr_n[hi]*svr_mid[hi])/(svr_n[hi]+1);
+						svr_mid[hi] = ((ss>20)*100.0f + svr_n[hi]*svr_mid[hi])/(svr_n[hi]+1);
 						svr_n[hi]++;
 
 					}
@@ -253,13 +260,13 @@ void CalcHist1()
 		svr_summ+=all_vl2[j];
 
 	for(int j=0;j<svr_num;j++)
-	if(all_vl2[j])
+	//if(all_vl2[j])
 	{
 		for(int i=0;i<rad_num;i++)
 		{
-			tbl.SetValue((float)((hist[i+j*rad_num]*100)/(all_vl2[j])),i+1,j+1);
+			tbl.SetValue((float)((hist[i+j*rad_num])),i+1,j+1);
 		}
-		tbl.SetValue((float)(all_vl2[j]/svr_summ),rad_num+1,j+1);
+		//tbl.SetValue((float)(all_vl2[j]/svr_summ),rad_num+1,j+1);
 	}
 	tbl.StoreToFile("results\\hist2_"+str::ToString(painting_rad_nm)+".txt");
 
