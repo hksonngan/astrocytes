@@ -26,6 +26,7 @@ vec Approx(vec& x_vals,vec& y_vals,v2vec& p_b);
 Mouse mouse;
 Camera cam;
 
+extern bool transparency[10];
 
 ivec2 old_mouse_pos;
 int keyboard[255];
@@ -175,7 +176,7 @@ srand(glfwGetTime ( ));
 		if(key=='T')
 		{
 			for(int i=0;i<neuron.size();i++)
-				if(i!=1 && i!=2)
+				//if(i!=1 && i!=2)
 				for(int j=0;j<neuron[i].size();j++)
 					if(neuron[i][j].vert.size())
 				{
@@ -331,6 +332,7 @@ srand(glfwGetTime ( ));
 		}
 
 		if(key=='S')smoothing=!smoothing;
+		if(key=='D')transparency[0]=!transparency[0];
 		if(key==']'){SaveApp("saving");}
 		if(key=='['){LoadApp("saving");}
 
