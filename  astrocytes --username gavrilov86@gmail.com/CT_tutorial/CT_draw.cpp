@@ -22,7 +22,7 @@ bool shaders_is=1,anag_left=0;
 
 extern ivec2 old_mouse_pos;
 float sect_radius=0.6;
-
+bool transparency[10];
 
 void DrawScene()
 {
@@ -104,53 +104,42 @@ void DrawScene()
 	sp.SetVar("params",vec4(0));
 
 	//glEnable(GL_DEPTH_TEST);
-
-	for(int i=1;i<neuron.size();i++)
+for(int tr=0;tr<2;tr++)
+	for(int i=0;i<neuron.size();i++)
 //	for(int i=neuron.size()-1;i>=0;i--)
+if((bool)tr==transparency[i])
 	for(int j=0;j<neuron[i].size();j++)
 		if(neuron[i][j].color.w)
-	//		if(i!=1 || j==cur_psd)
-	{
-		if(!i)
 		{
-			sp.SetVar("params",vec4(0,1,0,0));
-			glCullFace(GL_BACK);	
-		}
+	//		if(i!=1 || j==cur_psd)
+		if(!transparency[i])
+	{
+		sp.SetVar("params",vec4(0,0,0,0));
+		
 		glColor4fv(&neuron[i][j].color.x);
 		if(smoothing)
 			neuron[i][j].Draw2();
 		else
 			neuron[i][j].Draw();
 
-		if(!i)
-		{
-			sp.SetVar("params",vec4(0,0,0,0));
-			glCullFace(GL_FRONT);	
-		}
 		
-		if(draw_boxes)
-		{
-			if(shaders_is) sp.UnUse();
-			neuron[i][j].DrawBoxes();
-			if(shaders_is) sp.Use();
-		}
-
+		
+		
 	}
-	
-	int i=0;
-	for(int j=0;j<neuron[i].size();j++)
+		
+		else
 	{
 	
 		sp.SetVar("params",vec4(1,1,0,0));
 		glCullFace(GL_BACK);	
-		
 		glColor4fv(&neuron[i][j].color.x);
 		if(smoothing)			neuron[i][j].Draw2();		else			neuron[i][j].Draw();
 		sp.SetVar("params",vec4(1,0,0,0));
 		glCullFace(GL_FRONT);	
 		if(smoothing)			neuron[i][j].Draw2();		else			neuron[i][j].Draw();
 		
-		
+
+	}
 		if(draw_boxes)
 		{
 			if(shaders_is) sp.UnUse();
@@ -158,7 +147,7 @@ void DrawScene()
 			if(shaders_is) sp.Use();
 		}
 
-	}
+		}
 	if(shaders_is) sp.UnUse();
 
 	glColor4d(0,0,0,0.2f);
